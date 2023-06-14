@@ -13,17 +13,18 @@ import SwiftSyntaxMacros
 public struct AssociatedObjectMacro {}
 
 extension AssociatedObjectMacro: PeerMacro {
-    public static func expansion<
-        Context: MacroExpansionContext,
-        Declaration: DeclSyntaxProtocol
-    >(
+    public static func expansion<Context: MacroExpansionContext, Declaration: DeclSyntaxProtocol>(
         of node: AttributeSyntax,
         providingPeersOf declaration: Declaration,
         in context: Context
     ) throws -> [DeclSyntax] {
+
         guard let varDecl = declaration.as(VariableDeclSyntax.self),
               let binding = varDecl.bindings.first,
-              let identifier = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier else { return [] }
+              let identifier = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier else {
+            context.diagnose(AssociatedObjectMacroDiagnostic.requiresVariableDeclaration.diagnose(at: declaration))
+            return []
+        }
 
         let keyDecl = VariableDeclSyntax(
             bindingKeyword: .identifier("static var"),
@@ -49,23 +50,28 @@ extension AssociatedObjectMacro: AccessorMacro {
         in context: Context
     ) throws -> [AccessorDeclSyntax] {
 
-        guard let varDecl = declaration.as(VariableDeclSyntax.self) else {
+        guard let varDecl = declaration.as(VariableDeclSyntax.self),
+              let binding = varDecl.bindings.first,
+              let identifier = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier
+        else {
+            // Probably can't add a diagnose here, since this is an Accessor macro
             context.diagnose(AssociatedObjectMacroDiagnostic.requiresVariableDeclaration.diagnose(at: declaration))
             return []
         }
 
-        guard let binding = varDecl.bindings.first,
-              let identifier = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier,
-              let type = binding.typeAnnotation?.type
-        else {
+        //  Explicit specification of type is required
+        guard let type = binding.typeAnnotation?.type else {
+            context.diagnose(AssociatedObjectMacroDiagnostic.specifyTypeExplicitly.diagnose(at: identifier))
             return []
         }
 
-        guard binding.accessor == nil else {
-            context.diagnose(AssociatedObjectMacroDiagnostic.accessorShouldBeNil.diagnose(at: declaration))
+        // Error if accessor already exists
+        if let accessor = binding.accessor {
+            context.diagnose(AssociatedObjectMacroDiagnostic.accessorShouldBeNil.diagnose(at: accessor))
             return []
         }
 
+        // Initial value required
         guard let defaultValue = binding.initializer?.value else {
             context.diagnose(AssociatedObjectMacroDiagnostic.requiresInitialValue.diagnose(at: declaration))
             return []
@@ -79,9 +85,8 @@ extension AssociatedObjectMacro: AccessorMacro {
 
         return [
             """
-
             get {
-                return objc_getAssociatedObject(
+                objc_getAssociatedObject(
                     self,
                     &Self.__associated_\(identifier)Key
                 ) as? \(type)

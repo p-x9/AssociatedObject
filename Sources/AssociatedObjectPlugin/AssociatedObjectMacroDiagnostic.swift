@@ -13,6 +13,7 @@ public enum AssociatedObjectMacroDiagnostic {
     case requiresVariableDeclaration
     case accessorShouldBeNil
     case requiresInitialValue
+    case specifyTypeExplicitly
 }
 
 extension AssociatedObjectMacroDiagnostic: DiagnosticMessage {
@@ -28,6 +29,8 @@ extension AssociatedObjectMacroDiagnostic: DiagnosticMessage {
             return "`accessor should not be specified."
         case .requiresInitialValue:
             return "Initial values must be specified."
+        case .specifyTypeExplicitly:
+            return "Specify a type explicitly"
         }
     }
 
