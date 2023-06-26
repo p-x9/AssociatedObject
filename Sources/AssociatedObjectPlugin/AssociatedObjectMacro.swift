@@ -35,7 +35,7 @@ extension AssociatedObjectMacro: PeerMacro {
                     initializer: InitializerClauseSyntax(value: ExprSyntax(stringLiteral: "0"))
                 )
             }
-        ).formatted().as(VariableDeclSyntax.self)!
+        )
 
         return [
             DeclSyntax(keyDecl)
