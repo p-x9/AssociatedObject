@@ -65,9 +65,15 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        // Error if accessor already exists
-        if let accessor = binding.accessor {
-            context.diagnose(AssociatedObjectMacroDiagnostic.accessorShouldBeNil.diagnose(at: accessor))
+        // Error if setter already exists
+        if let setter = binding.setter {
+            context.diagnose(AssociatedObjectMacroDiagnostic.getterAndSetterShouldBeNil.diagnose(at: setter))
+            return []
+        }
+
+        // Error if getter already exists
+        if let getter = binding.getter {
+            context.diagnose(AssociatedObjectMacroDiagnostic.getterAndSetterShouldBeNil.diagnose(at: getter))
             return []
         }
 
@@ -83,28 +89,55 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
+        if let willSet = binding.willSet,
+           let parameter = willSet.parameter,
+           parameter.name.trimmed.text != "newValue" {
+            context.diagnose(AssociatedObjectMacroDiagnostic.accessorParameterNameMustBeNewValue.diagnose(at: parameter))
+            return []
+        }
+
         return [
-            """
-            get {
-                objc_getAssociatedObject(
-                    self,
-                    &Self.__associated_\(identifier)Key
-                ) as? \(type)
-                ?? \(defaultValue)
-            }
-            """,
+            AccessorDeclSyntax(
+                accessorKind: .keyword(.get),
+                body: CodeBlockSyntax {
+                    """
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_\(identifier)Key
+                    ) as? \(type)
+                    ?? \(defaultValue)
+                    """
+                }
+            ),
 
-            """
-
-            set {
-                objc_setAssociatedObject(
-                    self,
-                    &Self.__associated_\(identifier)Key,
-                    newValue,
-                    \(policy)
-                )
-            }
-            """
+            AccessorDeclSyntax(
+                accessorKind: .keyword(.set),
+                body: CodeBlockSyntax {
+                    if let willSet = binding.willSet?.body {
+                        """
+                        let willSet: (\(type.trimmed)) -> Void = { newValue in
+                            \(willSet.statements.trimmed)
+                        }
+                        willSet(newValue)
+                        """
+                    }
+                    """
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_\(identifier)Key,
+                        newValue,
+                        \(policy)
+                    )
+                    """
+                    if let didSet = binding.didSet?.body {
+                        """
+                        let didSet = {
+                            \(didSet.statements.trimmed)
+                        }
+                        didSet()
+                        """
+                    }
+                })
         ]
     }
 }

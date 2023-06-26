@@ -34,6 +34,49 @@ class ViewController: UIViewController {
 
 }
 ```
+### willSet/didSet
+Properties defined using `@AssociatedObject` can implement willSet and didSet.
+In swift, it is not possible to implement `willSet` and `didSet` at the same time as setter, so they are expanded as follows.
+
+```swift
+@AssociatedObject(.OBJC_ASSOCIATION_COPY_NONATOMIC)
+public var hello: String = "こんにちは" {
+    didSet {
+        print("didSet")
+    }
+    willSet {
+        print("willSet: \(newValue)")
+    }
+}
+
+// ↓↓↓ expand to ... ↓↓↓
+public var hello: String = "こんにちは" {
+    get {
+        objc_getAssociatedObject(
+            self,
+            &Self.__associated_helloKey
+        ) as? String
+        ?? "こんにちは"
+    }
+
+    set {
+        let willSet: (String) -> Void = { newValue in
+            print("willSet: \(newValue)")
+        }
+        willSet(newValue)
+        objc_setAssociatedObject(
+            self,
+            &Self.__associated_helloKey,
+            newValue,
+            .OBJC_ASSOCIATION_COPY_NONATOMIC
+        )
+        let didSet = {
+            print("didSet")
+        }
+        didSet()
+    }
+}
+```
 
 ## License
 AssociatedObject is released under the MIT License. See [LICENSE](./LICENSE)
