@@ -59,6 +59,11 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
+        if varDecl.bindings.count > 1 {
+            context.diagnose(AssociatedObjectMacroDiagnostic.multipleVariableDeclarationIsNotSupported.diagnose(at: binding))
+            return []
+        }
+
         //  Explicit specification of type is required
         guard let type = binding.typeAnnotation?.type else {
             context.diagnose(AssociatedObjectMacroDiagnostic.specifyTypeExplicitly.diagnose(at: identifier))
