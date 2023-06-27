@@ -101,6 +101,13 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
+        if let didSet = binding.didSet,
+           let parameter = didSet.parameter,
+           parameter.name.trimmed.text != "oldValue" {
+            context.diagnose(AssociatedObjectMacroDiagnostic.accessorParameterNameMustBeNewValue.diagnose(at: parameter))
+            return []
+        }
+
         return [
             AccessorDeclSyntax(
                 accessorKind: .keyword(.get),
@@ -126,6 +133,11 @@ extension AssociatedObjectMacro: AccessorMacro {
                         willSet(newValue)
                         """
                     }
+
+                    if binding.didSet != nil {
+                        "let oldValue = \(identifier)"
+                    }
+
                     """
                     objc_setAssociatedObject(
                         self,
@@ -134,12 +146,13 @@ extension AssociatedObjectMacro: AccessorMacro {
                         \(policy)
                     )
                     """
+
                     if let didSet = binding.didSet?.body {
                         """
-                        let didSet = {
+                        let didSet: (\(type.trimmed)) -> Void = { oldValue in
                             \(didSet.statements.trimmed)
                         }
-                        didSet()
+                        didSet(oldValue)
                         """
                     }
                 })
