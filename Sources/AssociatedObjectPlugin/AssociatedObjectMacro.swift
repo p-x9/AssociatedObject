@@ -127,7 +127,7 @@ extension AssociatedObjectMacro: AccessorMacro {
                 body: CodeBlockSyntax {
                     if let willSet = binding.willSet?.body {
                         """
-                        let willSet: (\(type.trimmed)) -> Void = { newValue in
+                        let willSet: (\(type.trimmed)) -> Void = { [self] newValue in
                             \(willSet.statements.trimmed)
                         }
                         willSet(newValue)
@@ -149,7 +149,7 @@ extension AssociatedObjectMacro: AccessorMacro {
 
                     if let didSet = binding.didSet?.body {
                         """
-                        let didSet: (\(type.trimmed)) -> Void = { oldValue in
+                        let didSet: (\(type.trimmed)) -> Void = { [self] oldValue in
                             \(didSet.statements.trimmed)
                         }
                         didSet(oldValue)
