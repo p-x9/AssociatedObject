@@ -13,7 +13,6 @@ public enum AssociatedObjectMacroDiagnostic {
     case requiresVariableDeclaration
     case multipleVariableDeclarationIsNotSupported
     case getterAndSetterShouldBeNil
-    case accessorParameterNameMustBeNewValue
     case requiresInitialValue
     case specifyTypeExplicitly
 }
@@ -33,8 +32,6 @@ extension AssociatedObjectMacroDiagnostic: DiagnosticMessage {
             """
         case .getterAndSetterShouldBeNil:
             return "getter and setter must not be implemented when using `@AssociatedObject`."
-        case .accessorParameterNameMustBeNewValue:
-            return "accessor parameter name must be `newValue` when using `@AssociatedObject`."
         case .requiresInitialValue:
             return "Initial values must be specified when using `@AssociatedObject`."
         case .specifyTypeExplicitly:
