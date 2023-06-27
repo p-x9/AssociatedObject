@@ -94,13 +94,6 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        if let willSet = binding.willSet,
-           let parameter = willSet.parameter,
-           parameter.name.trimmed.text != "newValue" {
-            context.diagnose(AssociatedObjectMacroDiagnostic.accessorParameterNameMustBeNewValue.diagnose(at: parameter))
-            return []
-        }
-
         return [
             AccessorDeclSyntax(
                 accessorKind: .keyword(.get),
@@ -118,14 +111,21 @@ extension AssociatedObjectMacro: AccessorMacro {
             AccessorDeclSyntax(
                 accessorKind: .keyword(.set),
                 body: CodeBlockSyntax {
-                    if let willSet = binding.willSet?.body {
+                    if let willSet = binding.willSet,
+                       let body = willSet.body {
+                        let newValue = willSet.parameter?.name.trimmed ?? .identifier("newValue")
                         """
-                        let willSet: (\(type.trimmed)) -> Void = { newValue in
-                            \(willSet.statements.trimmed)
+                        let willSet: (\(type.trimmed)) -> Void = { [self] \(newValue) in
+                            \(body.statements.trimmed)
                         }
                         willSet(newValue)
                         """
                     }
+
+                    if binding.didSet != nil {
+                        "let oldValue = \(identifier)"
+                    }
+
                     """
                     objc_setAssociatedObject(
                         self,
@@ -134,12 +134,15 @@ extension AssociatedObjectMacro: AccessorMacro {
                         \(policy)
                     )
                     """
-                    if let didSet = binding.didSet?.body {
+
+                    if let didSet = binding.didSet,
+                       let body = didSet.body {
+                        let oldValue = didSet.parameter?.name.trimmed ?? .identifier("oldValue")
                         """
-                        let didSet = {
-                            \(didSet.statements.trimmed)
+                        let didSet: (\(type.trimmed)) -> Void = { [self] \(oldValue) in
+                            \(body.statements.trimmed)
                         }
-                        didSet()
+                        didSet(oldValue)
                         """
                     }
                 })
