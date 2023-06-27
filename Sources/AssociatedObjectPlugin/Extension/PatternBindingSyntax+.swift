@@ -116,7 +116,7 @@ extension PatternBindingSyntax {
             return nil
         }
         set {
-            // NOTE: Be careful that willSet cannot be implemented without a setter.
+            // NOTE: Be careful that didSet cannot be implemented without a setter.
             setNewAccessor(kind: .keyword(.willSet), newValue: newValue)
         }
     }
