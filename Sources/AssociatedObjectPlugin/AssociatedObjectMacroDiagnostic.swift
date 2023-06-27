@@ -11,6 +11,7 @@ import SwiftDiagnostics
 
 public enum AssociatedObjectMacroDiagnostic {
     case requiresVariableDeclaration
+    case multipleVariableDeclarationIsNotSupported
     case getterAndSetterShouldBeNil
     case accessorParameterNameMustBeNewValue
     case requiresInitialValue
@@ -26,6 +27,10 @@ extension AssociatedObjectMacroDiagnostic: DiagnosticMessage {
         switch self {
         case .requiresVariableDeclaration:
             return "`@AssociatedObject` must be attached to the property declaration."
+        case .multipleVariableDeclarationIsNotSupported:
+            return """
+            Multiple variable declaration in one statement is not supported when using `@AssociatedObject`.
+            """
         case .getterAndSetterShouldBeNil:
             return "getter and setter must not be implemented when using `@AssociatedObject`."
         case .accessorParameterNameMustBeNewValue:
