@@ -82,8 +82,9 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        // Initial value required
-        guard let defaultValue = binding.initializer?.value else {
+        let defaultValue = binding.initializer?.value
+        // Initial value required if type is optional
+        if defaultValue == nil && !type.isOptional {
             context.diagnose(AssociatedObjectMacroDiagnostic.requiresInitialValue.diagnose(at: declaration))
             return []
         }
@@ -103,7 +104,7 @@ extension AssociatedObjectMacro: AccessorMacro {
                         self,
                         &Self.__associated_\(identifier)Key
                     ) as? \(type)
-                    ?? \(defaultValue)
+                    ?? \(defaultValue ?? "nil")
                     """
                 }
             ),
