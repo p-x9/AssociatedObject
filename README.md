@@ -60,20 +60,24 @@ public var hello: String = "こんにちは" {
     }
 
     set {
-        let willSet: (String) -> Void = { newValue in
+        let willSet: (String) -> Void = { [self] newValue in
             print("willSet: \(newValue)")
         }
         willSet(newValue)
+
+        let oldValue = hello
+
         objc_setAssociatedObject(
             self,
             &Self.__associated_helloKey,
             newValue,
             .OBJC_ASSOCIATION_COPY_NONATOMIC
         )
-        let didSet = {
+
+        let didSet: (String) -> Void = { [self] oldValue in
             print("didSet")
         }
-        didSet()
+        didSet(oldValue)
     }
 }
 ```
