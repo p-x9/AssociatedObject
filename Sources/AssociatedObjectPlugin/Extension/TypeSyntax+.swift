@@ -11,10 +11,10 @@ import SwiftSyntaxBuilder
 
 extension TypeSyntax {
     var isOptional: Bool {
-        if let optionalType = self.as(OptionalTypeSyntax.self) {
+        if self.as(OptionalTypeSyntax.self) != nil {
             return true
         }
-        if let simpleType = self.as(SimpleTypeIdentifierSyntax.self),
+        if let simpleType = self.as(IdentifierTypeSyntax.self),
            simpleType.name.trimmed.text == "Optional" {
             return true
         }

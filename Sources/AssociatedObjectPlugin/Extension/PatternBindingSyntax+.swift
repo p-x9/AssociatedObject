@@ -12,12 +12,13 @@ import SwiftSyntax
 extension PatternBindingSyntax {
     var setter: AccessorDeclSyntax? {
         get {
-            if case let .accessors(list) = accessor {
-                return list.accessors.first(where: {
-                    $0.accessorKind.tokenKind == .keyword(.set)
-                })
+            guard let accessors = accessorBlock?.accessors,
+                  case let .accessors(list) = accessors else {
+                return nil
             }
-            return nil
+            return list.first(where: {
+                $0.accessorSpecifier.tokenKind == .keyword(.set)
+            })
         }
 
         set {
@@ -28,49 +29,59 @@ extension PatternBindingSyntax {
 
     var getter: AccessorDeclSyntax? {
         get {
-            switch accessor {
+            switch accessorBlock?.accessors {
             case let .accessors(list):
-                return list.accessors.first(where: {
-                    $0.accessorKind.tokenKind == .keyword(.get)
+                return list.first(where: {
+                    $0.accessorSpecifier.tokenKind == .keyword(.get)
                 })
             case let .getter(body):
-                return AccessorDeclSyntax(accessorKind: .keyword(.get), body: body)
+                return AccessorDeclSyntax(accessorSpecifier: .keyword(.get), body: .init(statements: body))
             case .none:
                 return nil
             }
         }
 
         set {
-            switch accessor {
+            let newAccessors: AccessorBlockSyntax.Accessors
+
+            switch accessorBlock?.accessors {
             case .getter, .none:
                 if let newValue {
                     if let body = newValue.body {
-                        accessor = .getter(body)
+                        newAccessors = .getter(body.statements)
                     } else {
-                        let accessors = AccessorListSyntax {
+                        let accessors = AccessorDeclListSyntax {
                             newValue
                         }
-                        accessor = .accessors(.init(accessors: accessors))
+                        newAccessors = .accessors(accessors)
                     }
                 } else {
-                    accessor = .none
+                    accessorBlock = .none
+                    return
                 }
 
-            case let .accessors(block):
-                var accessors = block.accessors
-                for (i, accessor) in block.accessors.enumerated() {
-                    guard accessor.accessorKind.tokenKind == .keyword(.get) else {
-                        continue
-                    }
+            case let .accessors(list):
+                var newList = list
+                let accessor = list.first(where: { accessor in
+                    accessor.accessorSpecifier.tokenKind == .keyword(.get)
+                })
+                if let accessor,
+                   let index = list.index(of: accessor) {
                     if let newValue {
-                        accessors = accessors.replacing(childAt: i, with: newValue)
+                        newList[index] = newValue
                     } else {
-                        accessors = accessors.removing(childAt: i)
+                        newList.remove(at: index)
                     }
-                    break
+                } else if let newValue {
+                    newList.append(newValue)
                 }
-                let newBlock = block.with(\.accessors, accessors)
-                accessor = .accessors(newBlock)
+                newAccessors = .accessors(newList)
+            }
+
+            if accessorBlock == nil {
+                accessorBlock = .init(accessors: newAccessors)
+            } else {
+                accessorBlock = accessorBlock?.with(\.accessors, newAccessors)
             }
         }
     }
@@ -79,11 +90,12 @@ extension PatternBindingSyntax {
         if initializer != nil {
             return false
         }
-        if case let .accessors(list) = accessor,
-           list.accessors.contains(where: { $0.accessorKind.tokenKind == .keyword(.set) }) {
+        if let accessors = accessorBlock?.accessors,
+           case let .accessors(list) = accessors,
+           list.contains(where: { $0.accessorSpecifier.tokenKind == .keyword(.set) }) {
             return false
         }
-        if accessor == nil && initializer == nil {
+        if accessorBlock == nil && initializer == nil {
             return false
         }
         return true
@@ -93,9 +105,10 @@ extension PatternBindingSyntax {
 extension PatternBindingSyntax {
     var willSet: AccessorDeclSyntax? {
         get {
-            if case let .accessors(list) = accessor {
-                return list.accessors.first(where: {
-                    $0.accessorKind.tokenKind == .keyword(.willSet)
+            if let accessors = accessorBlock?.accessors,
+               case let .accessors(list) = accessors {
+                return list.first(where: {
+                    $0.accessorSpecifier.tokenKind == .keyword(.willSet)
                 })
             }
             return nil
@@ -108,9 +121,10 @@ extension PatternBindingSyntax {
 
     var didSet: AccessorDeclSyntax? {
         get {
-            if case let .accessors(list) = accessor {
-                return list.accessors.first(where: {
-                    $0.accessorKind.tokenKind == .keyword(.didSet)
+            if let accessors = accessorBlock?.accessors,
+               case let .accessors(list) = accessors {
+                return list.first(where: {
+                    $0.accessorSpecifier.tokenKind == .keyword(.didSet)
                 })
             }
             return nil
@@ -125,37 +139,44 @@ extension PatternBindingSyntax {
 extension PatternBindingSyntax {
     // NOTE: - getter requires extra steps and should not be used.
     private mutating func setNewAccessor(kind: TokenKind, newValue: AccessorDeclSyntax?) {
-        var newAccessor: Accessor?
+        var newAccessor: AccessorBlockSyntax.Accessors
 
-        switch accessor {
+        switch accessorBlock?.accessors {
         case let .getter(body):
             guard let newValue else { return }
-            newAccessor = .accessors(.init(accessors: AccessorListSyntax {
-                AccessorDeclSyntax(accessorKind: .keyword(.get), body: body)
-                newValue
-            }))
-        case let .accessors(block):
-            var accessors = block.accessors
-            for (i, accessor) in block.accessors.enumerated() {
-                guard accessor.accessorKind.tokenKind == kind else {
-                    continue
+            newAccessor = .accessors(
+                AccessorDeclListSyntax {
+                    AccessorDeclSyntax(accessorSpecifier: .keyword(.get), body: .init(statements: body))
+                    newValue
                 }
+            )
+        case let .accessors(list):
+            var newList = list
+            let accessor = list.first(where: { accessor in
+                accessor.accessorSpecifier.tokenKind == kind
+            })
+            if let accessor,
+               let index = list.index(of: accessor) {
                 if let newValue {
-                    accessors = accessors.replacing(childAt: i, with: newValue)
+                    newList[index] = newValue
                 } else {
-                    accessors = accessors.removing(childAt: i)
+                    newList.remove(at: index)
                 }
-                break
             }
-            let newBlock = block.with(\.accessors, accessors)
-            newAccessor = .accessors(newBlock)
+            newAccessor = .accessors(newList)
         case .none:
             guard let newValue else { return }
-            newAccessor = .accessors(.init(accessors: AccessorListSyntax {
-                newValue
-            }))
+            newAccessor = .accessors(
+                AccessorDeclListSyntax {
+                    newValue
+                }
+            )
         }
 
-        self.accessor = newAccessor
+        if accessorBlock == nil {
+            accessorBlock = .init(accessors: newAccessor)
+        } else {
+            accessorBlock = accessorBlock?.with(\.accessors, newAccessor)
+        }
     }
 }

@@ -27,11 +27,11 @@ extension AssociatedObjectMacro: PeerMacro {
         }
 
         let keyDecl = VariableDeclSyntax(
-            bindingKeyword: .identifier("static var"),
+            bindingSpecifier: .identifier("static var"),
             bindings: PatternBindingListSyntax {
                 PatternBindingSyntax(
                     pattern: IdentifierPatternSyntax(identifier: .identifier("__associated_\(identifier)Key")),
-                    typeAnnotation: .init(type: SimpleTypeIdentifierSyntax(name: .identifier("UInt8"))),
+                    typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UInt8"))),
                     initializer: InitializerClauseSyntax(value: ExprSyntax(stringLiteral: "0"))
                 )
             }
@@ -89,7 +89,7 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        guard case let .argumentList(arguments) = node.argument,
+        guard case let .argumentList(arguments) = node.arguments,
               let firstElement = arguments.first?.expression,
               let policy = firstElement.as(MemberAccessExprSyntax.self) else {
             return []
@@ -97,7 +97,7 @@ extension AssociatedObjectMacro: AccessorMacro {
 
         return [
             AccessorDeclSyntax(
-                accessorKind: .keyword(.get),
+                accessorSpecifier: .keyword(.get),
                 body: CodeBlockSyntax {
                     """
                     objc_getAssociatedObject(
@@ -110,11 +110,11 @@ extension AssociatedObjectMacro: AccessorMacro {
             ),
 
             AccessorDeclSyntax(
-                accessorKind: .keyword(.set),
+                accessorSpecifier: .keyword(.set),
                 body: CodeBlockSyntax {
                     if let willSet = binding.willSet,
                        let body = willSet.body {
-                        let newValue = willSet.parameter?.name.trimmed ?? .identifier("newValue")
+                        let newValue = willSet.parameters?.name.trimmed ?? .identifier("newValue")
                         """
                         let willSet: (\(type.trimmed)) -> Void = { [self] \(newValue) in
                             \(body.statements.trimmed)
@@ -138,7 +138,7 @@ extension AssociatedObjectMacro: AccessorMacro {
 
                     if let didSet = binding.didSet,
                        let body = didSet.body {
-                        let oldValue = didSet.parameter?.name.trimmed ?? .identifier("oldValue")
+                        let oldValue = didSet.parameters?.name.trimmed ?? .identifier("oldValue")
                         """
                         let didSet: (\(type.trimmed)) -> Void = { [self] \(oldValue) in
                             \(body.statements.trimmed)
