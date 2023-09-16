@@ -140,4 +140,59 @@ final class PatternBindingSyntaxTests: XCTestCase {
         binding.getter = newGetter
         XCTAssertEqual(newGetter.description, binding.getter?.description)
     }
+
+    func testWillSet() {
+        let `willSet` = AccessorDeclSyntax(accessorSpecifier: .keyword(.willSet), body: .init(statements: CodeBlockItemListSyntax {}))
+
+        let binding: PatternBindingSyntax = .init(
+            pattern: IdentifierPatternSyntax(identifier: .identifier("value")),
+            accessorBlock: .init(
+                accessors: .accessors(.init {
+                    `willSet`
+                })
+            )
+        )
+
+        XCTAssertEqual(`willSet`.description, binding.willSet?.description)
+    }
+
+    func testDidSet() {
+        let `didSet` = AccessorDeclSyntax(accessorSpecifier: .keyword(.didSet), body: .init(statements: CodeBlockItemListSyntax {}))
+
+        let binding: PatternBindingSyntax = .init(
+            pattern: IdentifierPatternSyntax(identifier: .identifier("value")),
+            accessorBlock: .init(
+                accessors: .accessors(.init {
+                    `didSet`
+                })
+            )
+        )
+
+        XCTAssertEqual(`didSet`.description, binding.didSet?.description)
+    }
+
+    func testSetWillSet() {
+        let `willSet` = AccessorDeclSyntax(accessorSpecifier: .keyword(.willSet), body: .init(statements: CodeBlockItemListSyntax {}))
+
+        var binding: PatternBindingSyntax = .init(
+            pattern: IdentifierPatternSyntax(identifier: .identifier("value")),
+            accessorBlock: .init(
+                accessors: .accessors(.init {
+                    `willSet`
+                })
+            )
+        )
+
+        let newWillSet = AccessorDeclSyntax(
+            accessorSpecifier: .keyword(.willSet),
+            body: .init(statements: CodeBlockItemListSyntax {
+                .init(item: .decl("\"hello\""))
+            })
+        )
+
+        binding.willSet = newWillSet
+        print(binding.description)
+        XCTAssertEqual(newWillSet.description, binding.willSet?.description)
+    }
+
 }
