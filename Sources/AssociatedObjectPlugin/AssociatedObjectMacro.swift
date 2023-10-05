@@ -96,9 +96,32 @@ extension AssociatedObjectMacro: AccessorMacro {
         }
 
         return [
-            AccessorDeclSyntax(
-                accessorSpecifier: .keyword(.get),
-                body: CodeBlockSyntax {
+            Self.getter(
+                identifier: identifier,
+                type: type,
+                defaultValue: defaultValue
+            ),
+
+            Self.setter(
+                identifier: identifier,
+                type: type,
+                policy: policy,
+                willSet: binding.willSet,
+                didSet: binding.didSet
+            )
+        ]
+    }
+}
+
+extension AssociatedObjectMacro {
+    static func getter(
+        identifier: TokenSyntax,
+        type: TypeSyntax,
+        defaultValue: ExprSyntax?
+    ) -> AccessorDeclSyntax {
+        AccessorDeclSyntax(
+            accessorSpecifier: .keyword(.get),
+            body: CodeBlockSyntax {
                     """
                     objc_getAssociatedObject(
                         self,
@@ -106,47 +129,175 @@ extension AssociatedObjectMacro: AccessorMacro {
                     ) as? \(type)
                     ?? \(defaultValue ?? "nil")
                     """
-                }
-            ),
+            }
+        )
+    }
+}
 
-            AccessorDeclSyntax(
-                accessorSpecifier: .keyword(.set),
-                body: CodeBlockSyntax {
-                    if let willSet = binding.willSet,
-                       let body = willSet.body {
-                        let newValue = willSet.parameters?.name.trimmed ?? .identifier("newValue")
-                        """
-                        let willSet: (\(type.trimmed)) -> Void = { [self] \(newValue) in
-                            \(body.statements.trimmed)
-                        }
-                        willSet(newValue)
-                        """
-                    }
-
-                    if binding.didSet != nil {
-                        "let oldValue = \(identifier)"
-                    }
-
-                    """
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_\(identifier)Key,
-                        newValue,
-                        \(policy)
+extension AssociatedObjectMacro {
+    static func setter(
+        identifier: TokenSyntax,
+        type: TypeSyntax,
+        policy: MemberAccessExprSyntax,
+        `willSet`: AccessorDeclSyntax?,
+        `didSet`: AccessorDeclSyntax?
+    ) -> AccessorDeclSyntax {
+        AccessorDeclSyntax(
+            accessorSpecifier: .keyword(.set),
+            body: CodeBlockSyntax {
+                if let willSet = `willSet`,
+                   let body = willSet.body {
+                    let newValue = willSet.parameters?.name.trimmed ?? .identifier("newValue")
+                    Self.willSet(
+                        accessor: willSet,
+                        type: type,
+                        body: body
                     )
-                    """
 
-                    if let didSet = binding.didSet,
-                       let body = didSet.body {
-                        let oldValue = didSet.parameters?.name.trimmed ?? .identifier("oldValue")
-                        """
-                        let didSet: (\(type.trimmed)) -> Void = { [self] \(oldValue) in
-                            \(body.statements.trimmed)
-                        }
-                        didSet(oldValue)
-                        """
-                    }
-                })
-        ]
+                    Self.callWillSet()
+                        .with(\.trailingTrivia, .newlines(2))
+                }
+
+                if `didSet` != nil {
+                    "let oldValue = \(identifier)"
+                }
+
+                """
+                objc_setAssociatedObject(
+                    self,
+                    &Self.__associated_\(identifier)Key,
+                    newValue,
+                    \(policy)
+                )
+                """
+
+                if let didSet = `didSet`,
+                   let body = didSet.body {
+                    let oldValue = didSet.parameters?.name.trimmed ?? .identifier("oldValue")
+
+                    Self.didSet(
+                        accessor: didSet,
+                        type: type,
+                        body: body
+                    ).with(\.leadingTrivia, .newlines(2))
+
+                    Self.callDidSet()
+                }
+            }
+        )
+    }
+
+    static func `willSet`(
+        accessor: AccessorDeclSyntax,
+        type: TypeSyntax,
+        body: CodeBlockSyntax
+    ) -> VariableDeclSyntax {
+        VariableDeclSyntax(
+            bindingSpecifier: .keyword(.let),
+            bindings: .init() {
+                .init(
+                    pattern: IdentifierPatternSyntax(identifier: .identifier("willSet")),
+                    typeAnnotation: .init(
+                        type: FunctionTypeSyntax(
+                            parameters: .init() {
+                                TupleTypeElementSyntax(
+                                    type: type
+                                )
+                            },
+                            returnClause: ReturnClauseSyntax(
+                                type: IdentifierTypeSyntax(name: .identifier("Void"))
+                            )
+                        )
+                    ),
+                    initializer: .init(
+                        value: ClosureExprSyntax(
+                            signature: .init(
+                                capture: .init() {
+                                    ClosureCaptureSyntax(
+                                        expression: DeclReferenceExprSyntax(
+                                            baseName: .keyword(.`self`)
+                                        )
+                                    )
+                                },
+                                parameterClause: .init(ClosureShorthandParameterListSyntax() {
+                                    ClosureShorthandParameterSyntax(name: .identifier("newValue"))
+                                })
+                            ),
+                            statements: .init(body.statements.map(\.trimmed))
+                        )
+                    )
+                )
+            }
+        )
+    }
+
+    static func `didSet`(
+        accessor: AccessorDeclSyntax,
+        type: TypeSyntax,
+        body: CodeBlockSyntax
+    ) -> VariableDeclSyntax {
+        VariableDeclSyntax(
+            bindingSpecifier: .keyword(.let),
+            bindings: .init() {
+                .init(
+                    pattern: IdentifierPatternSyntax(identifier: .identifier("didSet")),
+                    typeAnnotation: .init(
+                        type: FunctionTypeSyntax(
+                            parameters: .init() {
+                                TupleTypeElementSyntax(
+                                    type: type
+                                )
+                            },
+                            returnClause: ReturnClauseSyntax(
+                                type: IdentifierTypeSyntax(name: .identifier("Void"))
+                            )
+                        )
+                    ),
+                    initializer: .init(
+                        value: ClosureExprSyntax(
+                            signature: .init(
+                                capture: .init() {
+                                    ClosureCaptureSyntax(
+                                        expression: DeclReferenceExprSyntax(
+                                            baseName: .keyword(.`self`)
+                                        )
+                                    )
+                                },
+                                parameterClause: .init(ClosureShorthandParameterListSyntax() {
+                                    ClosureShorthandParameterSyntax(name: .identifier("oldValue"))
+                                })
+                            ),
+                            statements: .init(body.statements.map(\.trimmed))
+                        )
+                    )
+                )
+            }
+        )
+    }
+
+    static func callWillSet() -> FunctionCallExprSyntax {
+        FunctionCallExprSyntax(
+            callee: DeclReferenceExprSyntax(baseName: .identifier("willSet")),
+            argumentList: {
+                .init(
+                    expression: DeclReferenceExprSyntax(
+                        baseName: .identifier("newValue")
+                    )
+                )
+            }
+        )
+    }
+
+    static func callDidSet() -> FunctionCallExprSyntax {
+        FunctionCallExprSyntax(
+            callee: DeclReferenceExprSyntax(baseName: .identifier("didSet")),
+            argumentList: {
+                .init(
+                    expression: DeclReferenceExprSyntax(
+                        baseName: .identifier("oldValue")
+                    )
+                )
+            }
+        )
     }
 }
