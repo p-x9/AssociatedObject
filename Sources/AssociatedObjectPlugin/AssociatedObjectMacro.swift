@@ -184,7 +184,19 @@ extension AssociatedObjectMacro {
             }
         )
     }
-
+    
+    /// `willSet` closure
+    ///
+    /// Convert a willSet accessor to a closure variable in the following format.
+    /// ```swift
+    /// let `willSet`: (\(type.trimmed)) -> Void = { [self] \(newValue) in
+    ///     \(body.statements.trimmed)
+    /// }
+    /// ```
+    /// - Parameters:
+    ///   - type: Type of Associated object.
+    ///   - body: Contents of willSet
+    /// - Returns: Variable that converts the contents of willSet to a closure
     static func `willSet`(
         type: TypeSyntax,
         body: CodeBlockSyntax
@@ -228,6 +240,18 @@ extension AssociatedObjectMacro {
         )
     }
 
+    /// `didSet` closure
+    ///
+    /// Convert a didSet accessor to a closure variable in the following format.
+    /// ```swift
+    /// let `didSet`: (\(type.trimmed)) -> Void = { [self] \(oldValue) in
+    ///     \(body.statements.trimmed)
+    /// }
+    /// ```
+    /// - Parameters:
+    ///   - type: Type of Associated object.
+    ///   - body: Contents of didSet
+    /// - Returns: Variable that converts the contents of didSet to a closure
     static func `didSet`(
         type: TypeSyntax,
         body: CodeBlockSyntax
@@ -270,7 +294,13 @@ extension AssociatedObjectMacro {
             }
         )
     }
-
+    
+    /// Execute willSet closure
+    ///
+    /// ```swift
+    /// willSet(newValue)
+    /// ```
+    /// - Returns: Syntax for executing willSet closure
     static func callWillSet() -> FunctionCallExprSyntax {
         FunctionCallExprSyntax(
             callee: DeclReferenceExprSyntax(baseName: .identifier("willSet")),
@@ -283,7 +313,13 @@ extension AssociatedObjectMacro {
             }
         )
     }
-
+    
+    /// Execute didSet closure
+    ///
+    /// ```swift
+    /// didSet(oldValue)
+    /// ```
+    /// - Returns: Syntax for executing didSet closure
     static func callDidSet() -> FunctionCallExprSyntax {
         FunctionCallExprSyntax(
             callee: DeclReferenceExprSyntax(baseName: .identifier("didSet")),
