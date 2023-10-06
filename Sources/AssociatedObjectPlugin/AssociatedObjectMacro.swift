@@ -96,57 +96,259 @@ extension AssociatedObjectMacro: AccessorMacro {
         }
 
         return [
-            AccessorDeclSyntax(
-                accessorSpecifier: .keyword(.get),
-                body: CodeBlockSyntax {
-                    """
-                    objc_getAssociatedObject(
-                        self,
-                        &Self.__associated_\(identifier)Key
-                    ) as? \(type)
-                    ?? \(defaultValue ?? "nil")
-                    """
-                }
+            Self.getter(
+                identifier: identifier,
+                type: type,
+                defaultValue: defaultValue
             ),
 
-            AccessorDeclSyntax(
-                accessorSpecifier: .keyword(.set),
-                body: CodeBlockSyntax {
-                    if let willSet = binding.willSet,
-                       let body = willSet.body {
-                        let newValue = willSet.parameters?.name.trimmed ?? .identifier("newValue")
-                        """
-                        let willSet: (\(type.trimmed)) -> Void = { [self] \(newValue) in
-                            \(body.statements.trimmed)
-                        }
-                        willSet(newValue)
-                        """
-                    }
-
-                    if binding.didSet != nil {
-                        "let oldValue = \(identifier)"
-                    }
-
-                    """
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_\(identifier)Key,
-                        newValue,
-                        \(policy)
-                    )
-                    """
-
-                    if let didSet = binding.didSet,
-                       let body = didSet.body {
-                        let oldValue = didSet.parameters?.name.trimmed ?? .identifier("oldValue")
-                        """
-                        let didSet: (\(type.trimmed)) -> Void = { [self] \(oldValue) in
-                            \(body.statements.trimmed)
-                        }
-                        didSet(oldValue)
-                        """
-                    }
-                })
+            Self.setter(
+                identifier: identifier,
+                type: type,
+                policy: policy,
+                willSet: binding.willSet,
+                didSet: binding.didSet
+            )
         ]
+    }
+}
+
+extension AssociatedObjectMacro {
+    /// Create the syntax for the `get` accessor after expansion.
+    /// - Parameters:
+    ///   - identifier: Type of Associated object.
+    ///   - type: Type of Associated object.
+    ///   - defaultValue: Syntax of default value
+    /// - Returns: Syntax of `get` accessor after expansion.
+    static func getter(
+        identifier: TokenSyntax,
+        type: TypeSyntax,
+        defaultValue: ExprSyntax?
+    ) -> AccessorDeclSyntax {
+        AccessorDeclSyntax(
+            accessorSpecifier: .keyword(.get),
+            body: CodeBlockSyntax {
+                """
+                objc_getAssociatedObject(
+                    self,
+                    &Self.__associated_\(identifier)Key
+                ) as? \(type)
+                ?? \(defaultValue ?? "nil")
+                """
+            }
+        )
+    }
+}
+
+extension AssociatedObjectMacro {
+    /// Create the syntax for the `set` accessor after expansion.
+    /// - Parameters:
+    ///   - identifier: Name of associated object.
+    ///   - type: Type of Associated object.
+    ///   - policy: Syntax of `objc_AssociationPolicy`
+    ///   - `willSet`: `willSet` accessor of the original variable definition.
+    ///   - `didSet`: `didSet` accessor of the original variable definition.
+    /// - Returns: Syntax of `set` accessor after expansion.
+    static func setter(
+        identifier: TokenSyntax,
+        type: TypeSyntax,
+        policy: MemberAccessExprSyntax,
+        `willSet`: AccessorDeclSyntax?,
+        `didSet`: AccessorDeclSyntax?
+    ) -> AccessorDeclSyntax {
+        AccessorDeclSyntax(
+            accessorSpecifier: .keyword(.set),
+            body: CodeBlockSyntax {
+                if let willSet = `willSet`,
+                   let body = willSet.body {
+                    Self.willSet(
+                        type: type,
+                        accessor: willSet,
+                        body: body
+                    )
+
+                    Self.callWillSet()
+                        .with(\.trailingTrivia, .newlines(2))
+                }
+
+                if `didSet` != nil {
+                    "let oldValue = \(identifier)"
+                }
+
+                """
+                objc_setAssociatedObject(
+                    self,
+                    &Self.__associated_\(identifier)Key,
+                    newValue,
+                    \(policy)
+                )
+                """
+
+                if let didSet = `didSet`,
+                   let body = didSet.body {
+                    Self.didSet(
+                        type: type,
+                        accessor: didSet,
+                        body: body
+                    ).with(\.leadingTrivia, .newlines(2))
+
+                    Self.callDidSet()
+                }
+            }
+        )
+    }
+    
+    /// `willSet` closure
+    ///
+    /// Convert a willSet accessor to a closure variable in the following format.
+    /// ```swift
+    /// let `willSet`: (\(type.trimmed)) -> Void = { [self] \(newValue) in
+    ///     \(body.statements.trimmed)
+    /// }
+    /// ```
+    /// - Parameters:
+    ///   - type: Type of Associated object.
+    ///   - body: Contents of willSet
+    /// - Returns: Variable that converts the contents of willSet to a closure
+    static func `willSet`(
+        type: TypeSyntax,
+        accessor: AccessorDeclSyntax,
+        body: CodeBlockSyntax
+    ) -> VariableDeclSyntax {
+        let newValue = accessor.parameters?.name.trimmed ?? .identifier("newValue")
+
+        return VariableDeclSyntax(
+            bindingSpecifier: .keyword(.let),
+            bindings: .init() {
+                .init(
+                    pattern: IdentifierPatternSyntax(identifier: .identifier("willSet")),
+                    typeAnnotation: .init(
+                        type: FunctionTypeSyntax(
+                            parameters: .init() {
+                                TupleTypeElementSyntax(
+                                    type: type
+                                )
+                            },
+                            returnClause: ReturnClauseSyntax(
+                                type: IdentifierTypeSyntax(name: .identifier("Void"))
+                            )
+                        )
+                    ),
+                    initializer: .init(
+                        value: ClosureExprSyntax(
+                            signature: .init(
+                                capture: .init() {
+                                    ClosureCaptureSyntax(
+                                        expression: DeclReferenceExprSyntax(
+                                            baseName: .keyword(.`self`)
+                                        )
+                                    )
+                                },
+                                parameterClause: .init(ClosureShorthandParameterListSyntax() {
+                                    ClosureShorthandParameterSyntax(name: newValue)
+                                })
+                            ),
+                            statements: .init(body.statements.map(\.trimmed))
+                        )
+                    )
+                )
+            }
+        )
+    }
+
+    /// `didSet` closure
+    ///
+    /// Convert a didSet accessor to a closure variable in the following format.
+    /// ```swift
+    /// let `didSet`: (\(type.trimmed)) -> Void = { [self] \(oldValue) in
+    ///     \(body.statements.trimmed)
+    /// }
+    /// ```
+    /// - Parameters:
+    ///   - type: Type of Associated object.
+    ///   - body: Contents of didSet
+    /// - Returns: Variable that converts the contents of didSet to a closure
+    static func `didSet`(
+        type: TypeSyntax,
+        accessor: AccessorDeclSyntax,
+        body: CodeBlockSyntax
+    ) -> VariableDeclSyntax {
+        let oldValue = accessor.parameters?.name.trimmed ?? .identifier("oldValue")
+
+        return VariableDeclSyntax(
+            bindingSpecifier: .keyword(.let),
+            bindings: .init() {
+                .init(
+                    pattern: IdentifierPatternSyntax(identifier: .identifier("didSet")),
+                    typeAnnotation: .init(
+                        type: FunctionTypeSyntax(
+                            parameters: .init() {
+                                TupleTypeElementSyntax(
+                                    type: type
+                                )
+                            },
+                            returnClause: ReturnClauseSyntax(
+                                type: IdentifierTypeSyntax(name: .identifier("Void"))
+                            )
+                        )
+                    ),
+                    initializer: .init(
+                        value: ClosureExprSyntax(
+                            signature: .init(
+                                capture: .init() {
+                                    ClosureCaptureSyntax(
+                                        expression: DeclReferenceExprSyntax(
+                                            baseName: .keyword(.`self`)
+                                        )
+                                    )
+                                },
+                                parameterClause: .init(ClosureShorthandParameterListSyntax() {
+                                    ClosureShorthandParameterSyntax(name: oldValue)
+                                })
+                            ),
+                            statements: .init(body.statements.map(\.trimmed))
+                        )
+                    )
+                )
+            }
+        )
+    }
+    
+    /// Execute willSet closure
+    ///
+    /// ```swift
+    /// willSet(newValue)
+    /// ```
+    /// - Returns: Syntax for executing willSet closure
+    static func callWillSet() -> FunctionCallExprSyntax {
+        FunctionCallExprSyntax(
+            callee: DeclReferenceExprSyntax(baseName: .identifier("willSet")),
+            argumentList: {
+                .init(
+                    expression: DeclReferenceExprSyntax(
+                        baseName: .identifier("newValue")
+                    )
+                )
+            }
+        )
+    }
+    
+    /// Execute didSet closure
+    ///
+    /// ```swift
+    /// didSet(oldValue)
+    /// ```
+    /// - Returns: Syntax for executing didSet closure
+    static func callDidSet() -> FunctionCallExprSyntax {
+        FunctionCallExprSyntax(
+            callee: DeclReferenceExprSyntax(baseName: .identifier("didSet")),
+            argumentList: {
+                .init(
+                    expression: DeclReferenceExprSyntax(
+                        baseName: .identifier("oldValue")
+                    )
+                )
+            }
+        )
     }
 }
