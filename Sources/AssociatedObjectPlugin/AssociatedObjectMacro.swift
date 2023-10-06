@@ -161,9 +161,9 @@ extension AssociatedObjectMacro {
             body: CodeBlockSyntax {
                 if let willSet = `willSet`,
                    let body = willSet.body {
-                    let newValue = willSet.parameters?.name.trimmed ?? .identifier("newValue")
                     Self.willSet(
                         type: type,
+                        accessor: willSet,
                         body: body
                     )
 
@@ -186,10 +186,9 @@ extension AssociatedObjectMacro {
 
                 if let didSet = `didSet`,
                    let body = didSet.body {
-                    let oldValue = didSet.parameters?.name.trimmed ?? .identifier("oldValue")
-
                     Self.didSet(
                         type: type,
+                        accessor: didSet,
                         body: body
                     ).with(\.leadingTrivia, .newlines(2))
 
@@ -213,9 +212,12 @@ extension AssociatedObjectMacro {
     /// - Returns: Variable that converts the contents of willSet to a closure
     static func `willSet`(
         type: TypeSyntax,
+        accessor: AccessorDeclSyntax,
         body: CodeBlockSyntax
     ) -> VariableDeclSyntax {
-        VariableDeclSyntax(
+        let newValue = accessor.parameters?.name.trimmed ?? .identifier("newValue")
+
+        return VariableDeclSyntax(
             bindingSpecifier: .keyword(.let),
             bindings: .init() {
                 .init(
@@ -243,7 +245,7 @@ extension AssociatedObjectMacro {
                                     )
                                 },
                                 parameterClause: .init(ClosureShorthandParameterListSyntax() {
-                                    ClosureShorthandParameterSyntax(name: .identifier("newValue"))
+                                    ClosureShorthandParameterSyntax(name: newValue)
                                 })
                             ),
                             statements: .init(body.statements.map(\.trimmed))
@@ -268,9 +270,12 @@ extension AssociatedObjectMacro {
     /// - Returns: Variable that converts the contents of didSet to a closure
     static func `didSet`(
         type: TypeSyntax,
+        accessor: AccessorDeclSyntax,
         body: CodeBlockSyntax
     ) -> VariableDeclSyntax {
-        VariableDeclSyntax(
+        let oldValue = accessor.parameters?.name.trimmed ?? .identifier("oldValue")
+
+        return VariableDeclSyntax(
             bindingSpecifier: .keyword(.let),
             bindings: .init() {
                 .init(
@@ -298,7 +303,7 @@ extension AssociatedObjectMacro {
                                     )
                                 },
                                 parameterClause: .init(ClosureShorthandParameterListSyntax() {
-                                    ClosureShorthandParameterSyntax(name: .identifier("oldValue"))
+                                    ClosureShorthandParameterSyntax(name: oldValue)
                                 })
                             ),
                             statements: .init(body.statements.map(\.trimmed))
