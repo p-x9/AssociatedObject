@@ -122,13 +122,13 @@ extension AssociatedObjectMacro {
         AccessorDeclSyntax(
             accessorSpecifier: .keyword(.get),
             body: CodeBlockSyntax {
-                    """
-                    objc_getAssociatedObject(
-                        self,
-                        &Self.__associated_\(identifier)Key
-                    ) as? \(type)
-                    ?? \(defaultValue ?? "nil")
-                    """
+                """
+                objc_getAssociatedObject(
+                    self,
+                    &Self.__associated_\(identifier)Key
+                ) as? \(type)
+                ?? \(defaultValue ?? "nil")
+                """
             }
         )
     }
@@ -149,7 +149,6 @@ extension AssociatedObjectMacro {
                    let body = willSet.body {
                     let newValue = willSet.parameters?.name.trimmed ?? .identifier("newValue")
                     Self.willSet(
-                        accessor: willSet,
                         type: type,
                         body: body
                     )
@@ -176,7 +175,6 @@ extension AssociatedObjectMacro {
                     let oldValue = didSet.parameters?.name.trimmed ?? .identifier("oldValue")
 
                     Self.didSet(
-                        accessor: didSet,
                         type: type,
                         body: body
                     ).with(\.leadingTrivia, .newlines(2))
@@ -188,7 +186,6 @@ extension AssociatedObjectMacro {
     }
 
     static func `willSet`(
-        accessor: AccessorDeclSyntax,
         type: TypeSyntax,
         body: CodeBlockSyntax
     ) -> VariableDeclSyntax {
@@ -232,7 +229,6 @@ extension AssociatedObjectMacro {
     }
 
     static func `didSet`(
-        accessor: AccessorDeclSyntax,
         type: TypeSyntax,
         body: CodeBlockSyntax
     ) -> VariableDeclSyntax {
