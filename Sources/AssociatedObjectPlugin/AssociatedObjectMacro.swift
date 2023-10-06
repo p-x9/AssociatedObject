@@ -114,6 +114,12 @@ extension AssociatedObjectMacro: AccessorMacro {
 }
 
 extension AssociatedObjectMacro {
+    /// Create the syntax for the `get` accessor after expansion.
+    /// - Parameters:
+    ///   - identifier: Type of Associated object.
+    ///   - type: Type of Associated object.
+    ///   - defaultValue: Syntax of default value
+    /// - Returns: Syntax of `get` accessor after expansion.
     static func getter(
         identifier: TokenSyntax,
         type: TypeSyntax,
@@ -135,6 +141,14 @@ extension AssociatedObjectMacro {
 }
 
 extension AssociatedObjectMacro {
+    /// Create the syntax for the `set` accessor after expansion.
+    /// - Parameters:
+    ///   - identifier: Name of associated object.
+    ///   - type: Type of Associated object.
+    ///   - policy: Syntax of `objc_AssociationPolicy`
+    ///   - `willSet`: `willSet` accessor of the original variable definition.
+    ///   - `didSet`: `didSet` accessor of the original variable definition.
+    /// - Returns: Syntax of `set` accessor after expansion.
     static func setter(
         identifier: TokenSyntax,
         type: TypeSyntax,
