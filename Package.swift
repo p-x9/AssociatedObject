@@ -38,7 +38,10 @@ let package = Package(
         ),
         .testTarget(
             name: "AssociatedObjectTests",
-            dependencies: ["AssociatedObject"]
+            dependencies: [
+                "AssociatedObject",
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
+            ]
         ),
     ]
 )

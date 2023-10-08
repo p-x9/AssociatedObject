@@ -30,7 +30,7 @@ extension AssociatedObjectMacro: PeerMacro {
             bindingSpecifier: .identifier("static var"),
             bindings: PatternBindingListSyntax {
                 PatternBindingSyntax(
-                    pattern: IdentifierPatternSyntax(identifier: .identifier("__associated_\(identifier)Key")),
+                    pattern: IdentifierPatternSyntax(identifier: .identifier("__associated_\(identifier.trimmed)Key")),
                     typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UInt8"))),
                     initializer: InitializerClauseSyntax(value: ExprSyntax(stringLiteral: "0"))
                 )
@@ -131,7 +131,7 @@ extension AssociatedObjectMacro {
                 """
                 objc_getAssociatedObject(
                     self,
-                    &Self.__associated_\(identifier)Key
+                    &Self.__associated_\(identifier.trimmed)Key
                 ) as? \(type)
                 ?? \(defaultValue ?? "nil")
                 """
@@ -178,7 +178,7 @@ extension AssociatedObjectMacro {
                 """
                 objc_setAssociatedObject(
                     self,
-                    &Self.__associated_\(identifier)Key,
+                    &Self.__associated_\(identifier.trimmed)Key,
                     newValue,
                     \(policy)
                 )
