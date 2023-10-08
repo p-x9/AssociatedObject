@@ -72,6 +72,38 @@ final class AssociatedObjectTests: XCTestCase {
         )
     }
 
+    func testStringWithOtherPolicy() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_COPY)
+            var string: String = "text"
+            """,
+            expandedSource:
+            """
+            var string: String = "text" {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey
+                    ) as? String
+                    ?? "text"
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_COPY
+                    )
+                }
+            }
+
+            static var __associated_stringKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+
     func testOptionalString() throws {
         assertMacroExpansion(
             """
