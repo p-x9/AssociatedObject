@@ -2,6 +2,7 @@ import XCTest
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 @testable import AssociatedObjectPlugin
+@testable import AssociatedObject
 
 final class AssociatedObjectTests: XCTestCase {
     let macros: [String: Macro.Type] = [
@@ -407,6 +408,38 @@ final class AssociatedObjectTests: XCTestCase {
                         print("didSet: old", old)
                     }
                     didSet(oldValue)
+                }
+            }
+
+            static var __associated_stringKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+
+    func testModernWritingStyle() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.copy(.nonatomic))
+            var string: String = "text"
+            """,
+            expandedSource:
+            """
+            var string: String = "text" {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey
+                    ) as? String
+                    ?? "text"
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        newValue,
+                        .copy(.nonatomic)
+                    )
                 }
             }
 

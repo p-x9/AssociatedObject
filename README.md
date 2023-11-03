@@ -15,6 +15,11 @@ For example, you can add a new stored property to `UIViewController` by declarin
 import AssociatedObject
 
 extension UIViewController {
+    @AssociatedObject(.retain(nonatomic))
+    var text = "text"
+
+    /* OR */
+
     @AssociatedObject(.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     var text = "text"
 }
@@ -39,7 +44,7 @@ Properties defined using `@AssociatedObject` can implement willSet and didSet.
 In swift, it is not possible to implement `willSet` and `didSet` at the same time as setter, so they are expanded as follows.
 
 ```swift
-@AssociatedObject(.OBJC_ASSOCIATION_COPY_NONATOMIC)
+@AssociatedObject(.copy(nonatomic))
 public var hello: String = "こんにちは" {
     didSet {
         print("didSet")
@@ -71,7 +76,7 @@ public var hello: String = "こんにちは" {
             self,
             &Self.__associated_helloKey,
             newValue,
-            .OBJC_ASSOCIATION_COPY_NONATOMIC
+            .copy(nonatomic)
         )
 
         let didSet: (String) -> Void = { [self] oldValue in
