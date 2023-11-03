@@ -91,7 +91,7 @@ extension AssociatedObjectMacro: AccessorMacro {
 
         guard case let .argumentList(arguments) = node.arguments,
               let firstElement = arguments.first?.expression,
-              let policy = firstElement.as(MemberAccessExprSyntax.self) else {
+              let policy = firstElement.as(ExprSyntax.self) else {
             return []
         }
 
@@ -152,7 +152,7 @@ extension AssociatedObjectMacro {
     static func setter(
         identifier: TokenSyntax,
         type: TypeSyntax,
-        policy: MemberAccessExprSyntax,
+        policy: ExprSyntax,
         `willSet`: AccessorDeclSyntax?,
         `didSet`: AccessorDeclSyntax?
     ) -> AccessorDeclSyntax {
