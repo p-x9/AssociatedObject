@@ -226,7 +226,7 @@ extension AssociatedObjectMacro {
                         type: FunctionTypeSyntax(
                             parameters: .init() {
                                 TupleTypeElementSyntax(
-                                    type: type
+                                    type: type.trimmed
                                 )
                             },
                             returnClause: ReturnClauseSyntax(
@@ -284,7 +284,7 @@ extension AssociatedObjectMacro {
                         type: FunctionTypeSyntax(
                             parameters: .init() {
                                 TupleTypeElementSyntax(
-                                    type: type
+                                    type: type.trimmed
                                 )
                             },
                             returnClause: ReturnClauseSyntax(
