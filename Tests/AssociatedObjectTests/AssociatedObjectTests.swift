@@ -725,11 +725,11 @@ final class AssociatedObjectTests: XCTestCase {
         assertMacroExpansion(
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
-            var string = ["text"]
+            var string = ["text", 123]
             """,
             expandedSource:
             """
-            var string = ["text"]
+            var string = ["text", 123]
 
             static var __associated_stringKey: UInt8 = 0
             """,
