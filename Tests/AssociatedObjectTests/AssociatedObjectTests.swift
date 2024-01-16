@@ -19,11 +19,20 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var string: String = "text" {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String
-                    ?? "text"
+                    ) as? String {
+                        return value
+                    }
+                    let value = "text"
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -51,11 +60,20 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var int: Int = 5 {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_intKey
-                    ) as? Int
-                    ?? 5
+                    ) as? Int {
+                        return value
+                    }
+                    let value = 5
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_intKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -83,11 +101,20 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var float: Float = 5.0 {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_floatKey
-                    ) as? Float
-                    ?? 5.0
+                    ) as? Float {
+                        return value
+                    }
+                    let value = 5.0
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_floatKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -115,11 +142,20 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var double: Double = 5.0 {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_doubleKey
-                    ) as? Double
-                    ?? 5.0
+                    ) as? Double {
+                        return value
+                    }
+                    let value = 5.0
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_doubleKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -147,11 +183,20 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var string: String = "text" {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String
-                    ?? "text"
+                    ) as? String {
+                        return value
+                    }
+                    let value = "text"
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        value,
+                        .OBJC_ASSOCIATION_COPY
+                    )
+                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -179,11 +224,13 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var string: String? {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String?
-                    ?? nil
+                    ) as? String? {
+                        return value
+                    }
+                    return nil
                 }
                 set {
                     objc_setAssociatedObject(
@@ -211,11 +258,13 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var string: Optional<String> {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? Optional<String>
-                    ?? nil
+                    ) as? Optional<String> {
+                        return value
+                    }
+                    return nil
                 }
                 set {
                     objc_setAssociatedObject(
@@ -243,11 +292,20 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var bool: Bool = false {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_boolKey
-                    ) as? Bool
-                    ?? false
+                    ) as? Bool {
+                        return value
+                    }
+                    let value = false
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_boolKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -275,11 +333,20 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var intArray: [Int] = [1, 2, 3] {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_intArrayKey
-                    ) as? [Int]
-                    ?? [1, 2, 3]
+                    ) as? [Int] {
+                        return value
+                    }
+                    let value = [1, 2, 3]
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_intArrayKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -307,11 +374,13 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var bool: Bool? {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_boolKey
-                    ) as? Bool?
-                    ?? nil
+                    ) as? Bool? {
+                        return value
+                    }
+                    return nil
                 }
                 set {
                     objc_setAssociatedObject(
@@ -339,11 +408,20 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var dic: [String: String] = ["t": "a"] {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_dicKey
-                    ) as? [String: String]
-                    ?? ["t": "a"]
+                    ) as? [String: String] {
+                        return value
+                    }
+                    let value = ["t": "a"]
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_dicKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -380,11 +458,20 @@ final class AssociatedObjectTests: XCTestCase {
                     print("willSet: new", newValue)
                 }
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String
-                    ?? "text"
+                    ) as? String {
+                        return value
+                    }
+                    let value = "text"
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
 
                 set {
@@ -426,11 +513,20 @@ final class AssociatedObjectTests: XCTestCase {
                     print("didSet: old", oldValue)
                 }
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String
-                    ?? "text"
+                    ) as? String {
+                        return value
+                    }
+                    let value = "text"
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
 
                 set {
@@ -480,11 +576,20 @@ final class AssociatedObjectTests: XCTestCase {
                     print("didSet: old", oldValue)
                 }
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String
-                    ?? "text"
+                    ) as? String {
+                        return value
+                    }
+                    let value = "text"
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
 
                 set {
@@ -534,11 +639,20 @@ final class AssociatedObjectTests: XCTestCase {
                     print("willSet: new", new)
                 }
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String
-                    ?? "text"
+                    ) as? String {
+                        return value
+                    }
+                    let value = "text"
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
 
                 set {
@@ -580,11 +694,20 @@ final class AssociatedObjectTests: XCTestCase {
                     print("didSet: old", old)
                 }
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String
-                    ?? "text"
+                    ) as? String {
+                        return value
+                    }
+                    let value = "text"
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
                 }
 
                 set {
@@ -619,11 +742,20 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var string: String = "text" {
                 get {
-                    objc_getAssociatedObject(
+                    if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String
-                    ?? "text"
+                    ) as? String {
+                        return value
+                    }
+                    let value = "text"
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        value,
+                        .copy(.nonatomic)
+                    )
+                    return value
                 }
                 set {
                     objc_setAssociatedObject(

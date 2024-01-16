@@ -107,6 +107,7 @@ extension AssociatedObjectMacro: AccessorMacro {
             Self.getter(
                 identifier: identifier,
                 type: type,
+                policy: policy,
                 defaultValue: defaultValue
             ),
 
@@ -131,18 +132,40 @@ extension AssociatedObjectMacro {
     static func getter(
         identifier: TokenSyntax,
         type: TypeSyntax,
+        policy: ExprSyntax,
         defaultValue: ExprSyntax?
     ) -> AccessorDeclSyntax {
         AccessorDeclSyntax(
             accessorSpecifier: .keyword(.get),
             body: CodeBlockSyntax {
-                """
-                objc_getAssociatedObject(
-                    self,
-                    &Self.__associated_\(identifier.trimmed)Key
-                ) as? \(type)
-                ?? \(defaultValue ?? "nil")
-                """
+                if let defaultValue {
+                    """
+                    if let value = objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_\(identifier.trimmed)Key
+                    ) as? \(type.trimmed) {
+                        return value
+                    }
+                        let value = \(defaultValue.trimmed)
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_\(identifier.trimmed)Key,
+                            value,
+                            \(policy.trimmed)
+                        )
+                        return value
+                    """
+                } else {
+                    """
+                    if let value = objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_\(identifier.trimmed)Key
+                    ) as? \(type.trimmed) {
+                        return value
+                    }
+                        return nil
+                    """
+                }
             }
         )
     }
