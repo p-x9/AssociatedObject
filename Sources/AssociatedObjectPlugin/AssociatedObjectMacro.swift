@@ -63,9 +63,18 @@ extension AssociatedObjectMacro: AccessorMacro {
             context.diagnose(AssociatedObjectMacroDiagnostic.multipleVariableDeclarationIsNotSupported.diagnose(at: binding))
             return []
         }
+		
+		let defaultValue = binding.initializer?.value
+		let varType: TypeSyntax
 
-        //  Explicit specification of type is required
-        guard let type = binding.typeAnnotation?.type else {
+        if let type = binding.typeAnnotation?.type {
+            //  TypeAnnotation
+            varType = type
+        } else if let type = typeDetection(defaultValue) {
+            //  TypeDetection
+            varType = type
+        } else {
+            //  Explicit specification of type is required
             context.diagnose(AssociatedObjectMacroDiagnostic.specifyTypeExplicitly.diagnose(at: identifier))
             return []
         }
@@ -82,9 +91,8 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        let defaultValue = binding.initializer?.value
         // Initial value required if type is optional
-        if defaultValue == nil && !type.isOptional {
+        if defaultValue == nil && !varType.isOptional {
             context.diagnose(AssociatedObjectMacroDiagnostic.requiresInitialValue.diagnose(at: declaration))
             return []
         }
@@ -98,18 +106,70 @@ extension AssociatedObjectMacro: AccessorMacro {
         return [
             Self.getter(
                 identifier: identifier,
-                type: type,
+                type: varType,
                 defaultValue: defaultValue
             ),
 
             Self.setter(
                 identifier: identifier,
-                type: type,
+                type: varType,
                 policy: policy,
                 willSet: binding.willSet,
                 didSet: binding.didSet
             )
         ]
+    }
+    
+    private static func typeDetection(_ value: ExprSyntax?) -> TypeSyntax? {
+        guard let value else { return nil }
+        switch value.kind {
+        case .stringLiteralExpr:
+            return .init(IdentifierTypeSyntax(name: .identifier("String")))
+        case .integerLiteralExpr:
+            return .init(IdentifierTypeSyntax(name: .identifier("Int")))
+        case .floatLiteralExpr:
+            return .init(IdentifierTypeSyntax(name: .identifier("Double")))
+        case .booleanLiteralExpr:
+            return .init(IdentifierTypeSyntax(name: .identifier("Bool")))
+        case .arrayExpr:
+            guard let arr = ArrayExprSyntax(value) else { return nil }
+            let itemTypes = arr.elements
+                .map(\.expression)
+                .map(typeDetection(_:))
+            guard let itemType = arrayTypeDetection(itemTypes) else { return nil }
+            return .init(ArrayTypeSyntax(element: itemType))
+        case .dictionaryExpr:
+            guard let dic = DictionaryExprSyntax(value), case let .elements(list) = dic.content else { return nil }
+            let keyTypes = list
+                .map(\.key)
+                .map(typeDetection(_:))
+            let valueTypes = list
+                .map(\.value)
+                .map(typeDetection(_:))
+            guard let keyType = arrayTypeDetection(keyTypes), let valueType = arrayTypeDetection(valueTypes) else { return nil }
+            return .init(DictionaryTypeSyntax(key: keyType, value: valueType))
+        default:
+            return nil
+        }
+    }
+    
+    private static func arrayTypeDetection(_ types: [TypeSyntax?]) -> TypeSyntaxProtocol? {
+        let identifiers = types.map { IdentifierTypeSyntax($0)?.name.text }.removeDuplicate()
+        if identifiers.count == 1, let type = types.first as? TypeSyntax {
+            return type
+        } else if identifiers.filter({ $0 != nil }).count == 1, let type = types.first(where: { !($0?.isOptional ?? true) }) as? TypeSyntax {
+            return OptionalTypeSyntax(wrappedType: type)
+        } else {
+            return nil
+        }
+    }
+}
+
+private extension Array where Element: Equatable {
+    func removeDuplicate() -> Array {
+        return enumerated().filter { index, value -> Bool in
+            firstIndex(where: { $0 == value }) == index
+        }.map { $0.element }
     }
 }
 
