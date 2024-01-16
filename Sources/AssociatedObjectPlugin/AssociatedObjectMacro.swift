@@ -146,7 +146,7 @@ extension AssociatedObjectMacro {
                     ) as? \(type.trimmed) {
                         return value
                     }
-                        let value = \(defaultValue.trimmed)
+                        let value: \(type.trimmed) = \(defaultValue.trimmed)
                         objc_setAssociatedObject(
                             self,
                             &Self.__associated_\(identifier.trimmed)Key,

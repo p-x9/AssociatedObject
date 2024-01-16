@@ -8,7 +8,7 @@ final class AssociatedObjectTests: XCTestCase {
     let macros: [String: Macro.Type] = [
         "AssociatedObject": AssociatedObjectMacro.self
     ]
-
+    
     func testString() throws {
         assertMacroExpansion(
             """
@@ -25,7 +25,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? String {
                         return value
                     }
-                    let value = "text"
+                    let value: String = "text"
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_stringKey,
@@ -66,7 +66,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? Int {
                         return value
                     }
-                    let value = 5
+                    let value: Int = 5
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_intKey,
@@ -107,7 +107,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? Float {
                         return value
                     }
-                    let value = 5.0
+                    let value: Float = 5.0
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_floatKey,
@@ -148,7 +148,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? Double {
                         return value
                     }
-                    let value = 5.0
+                    let value: Double = 5.0
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_doubleKey,
@@ -189,7 +189,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? String {
                         return value
                     }
-                    let value = "text"
+                    let value: String = "text"
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_stringKey,
@@ -298,7 +298,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? Bool {
                         return value
                     }
-                    let value = false
+                    let value: Bool = false
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_boolKey,
@@ -339,7 +339,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? [Int] {
                         return value
                     }
-                    let value = [1, 2, 3]
+                    let value: [Int] = [1, 2, 3]
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_intArrayKey,
@@ -414,7 +414,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? [String: String] {
                         return value
                     }
-                    let value = ["t": "a"]
+                    let value: [String: String] = ["t": "a"]
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_dicKey,
@@ -464,7 +464,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? String {
                         return value
                     }
-                    let value = "text"
+                    let value: String = "text"
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_stringKey,
@@ -519,7 +519,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? String {
                         return value
                     }
-                    let value = "text"
+                    let value: String = "text"
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_stringKey,
@@ -582,7 +582,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? String {
                         return value
                     }
-                    let value = "text"
+                    let value: String = "text"
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_stringKey,
@@ -645,7 +645,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? String {
                         return value
                     }
-                    let value = "text"
+                    let value: String = "text"
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_stringKey,
@@ -700,7 +700,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? String {
                         return value
                     }
-                    let value = "text"
+                    let value: String = "text"
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_stringKey,
@@ -748,7 +748,7 @@ final class AssociatedObjectTests: XCTestCase {
                     ) as? String {
                         return value
                     }
-                    let value = "text"
+                    let value: String = "text"
                     objc_setAssociatedObject(
                         self,
                         &Self.__associated_stringKey,
