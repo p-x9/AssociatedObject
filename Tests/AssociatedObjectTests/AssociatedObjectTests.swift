@@ -388,7 +388,7 @@ final class AssociatedObjectTests: XCTestCase {
                 }
 
                 set {
-                    let willSet: (String ) -> Void = { [self] newValue in
+                    let willSet: (String) -> Void = { [self] newValue in
                         print("willSet: old", string)
                         print("willSet: new", newValue)
                     }
@@ -442,7 +442,7 @@ final class AssociatedObjectTests: XCTestCase {
                         .OBJC_ASSOCIATION_ASSIGN
                     )
 
-                    let didSet: (String ) -> Void = { [self] oldValue in
+                    let didSet: (String) -> Void = { [self] oldValue in
                         print("didSet: old", oldValue)
                     }
                     didSet(oldValue)
@@ -488,7 +488,7 @@ final class AssociatedObjectTests: XCTestCase {
                 }
 
                 set {
-                    let willSet: (String ) -> Void = { [self] newValue in
+                    let willSet: (String) -> Void = { [self] newValue in
                         print("willSet: old", string)
                         print("willSet: new", newValue)
                     }
@@ -502,7 +502,7 @@ final class AssociatedObjectTests: XCTestCase {
                         .OBJC_ASSOCIATION_ASSIGN
                     )
 
-                    let didSet: (String ) -> Void = { [self] oldValue in
+                    let didSet: (String) -> Void = { [self] oldValue in
                         print("didSet: old", oldValue)
                     }
                     didSet(oldValue)
@@ -542,7 +542,7 @@ final class AssociatedObjectTests: XCTestCase {
                 }
 
                 set {
-                    let willSet: (String ) -> Void = { [self] new in
+                    let willSet: (String) -> Void = { [self] new in
                         print("willSet: old", string)
                         print("willSet: new", new)
                     }
@@ -596,7 +596,7 @@ final class AssociatedObjectTests: XCTestCase {
                         .OBJC_ASSOCIATION_ASSIGN
                     )
 
-                    let didSet: (String ) -> Void = { [self] old in
+                    let didSet: (String) -> Void = { [self] old in
                         print("didSet: old", old)
                     }
                     didSet(oldValue)
