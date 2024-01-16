@@ -86,7 +86,7 @@ final class AssociatedObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_floatKey
-                    ) as? Double
+                    ) as? Float
                     ?? 5.0
                 }
                 set {
