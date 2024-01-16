@@ -227,7 +227,41 @@ final class AssociatedObjectTests: XCTestCase {
                     if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String? {
+                    ) as? String {
+                        return value
+                    }
+                    return nil
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+
+            static var __associated_stringKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+    
+    func testImplicitlyUnwrappedOptionalString() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            var string: String!
+            """,
+            expandedSource:
+            """
+            var string: String! {
+                get {
+                    if let value = objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey
+                    ) as? String {
                         return value
                     }
                     return nil
@@ -377,7 +411,7 @@ final class AssociatedObjectTests: XCTestCase {
                     if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_boolKey
-                    ) as? Bool? {
+                    ) as? Bool {
                         return value
                     }
                     return nil

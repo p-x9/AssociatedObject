@@ -135,7 +135,14 @@ extension AssociatedObjectMacro {
         policy: ExprSyntax,
         defaultValue: ExprSyntax?
     ) -> AccessorDeclSyntax {
-        AccessorDeclSyntax(
+        let varTypeWithoutOptional = if let type = type.as(OptionalTypeSyntax.self) {
+            type.wrappedType
+        } else if let type = type.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
+            type.wrappedType
+        } else {
+            type
+        }
+        return AccessorDeclSyntax(
             accessorSpecifier: .keyword(.get),
             body: CodeBlockSyntax {
                 if let defaultValue {
@@ -143,7 +150,7 @@ extension AssociatedObjectMacro {
                     if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_\(identifier.trimmed)Key
-                    ) as? \(type.trimmed) {
+                    ) as? \(varTypeWithoutOptional.trimmed) {
                         return value
                     }
                         let value: \(type.trimmed) = \(defaultValue.trimmed)
@@ -160,7 +167,7 @@ extension AssociatedObjectMacro {
                     if let value = objc_getAssociatedObject(
                         self,
                         &Self.__associated_\(identifier.trimmed)Key
-                    ) as? \(type.trimmed) {
+                    ) as? \(varTypeWithoutOptional.trimmed) {
                         return value
                     }
                         return nil
