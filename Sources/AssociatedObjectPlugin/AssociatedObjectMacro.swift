@@ -25,6 +25,13 @@ extension AssociatedObjectMacro: PeerMacro {
             context.diagnose(AssociatedObjectMacroDiagnostic.requiresVariableDeclaration.diagnose(at: declaration))
             return []
         }
+        
+        if case let .argumentList(arguments) = node.arguments,
+           let element = arguments.first(where: { $0.label?.text == "key" }),
+           element.expression.is(DeclReferenceExprSyntax.self) {
+            // Provide store key from outside the macro
+            return []
+        }
 
         let keyDecl = VariableDeclSyntax(
             bindingSpecifier: .identifier("static var"),
@@ -102,11 +109,20 @@ extension AssociatedObjectMacro: AccessorMacro {
               let policy = firstElement.as(ExprSyntax.self) else {
             return []
         }
+        
+        var associatedKey = "&Self.__associated_\(identifier.trimmed)Key"
+        if case let .argumentList(arguments) = node.arguments,
+           let element = arguments.first(where: { $0.label?.text == "key" }),
+           let s = element.expression.as(DeclReferenceExprSyntax.self) {
+            // Provide store key from outside the macro
+            associatedKey = "&\(s.trimmedDescription)"
+        }
 
         return [
             Self.getter(
                 identifier: identifier,
                 type: type,
+                associatedKey: associatedKey,
                 policy: policy,
                 defaultValue: defaultValue
             ),
@@ -115,6 +131,7 @@ extension AssociatedObjectMacro: AccessorMacro {
                 identifier: identifier,
                 type: type,
                 policy: policy,
+                associatedKey: associatedKey,
                 willSet: binding.willSet,
                 didSet: binding.didSet
             )
@@ -132,6 +149,7 @@ extension AssociatedObjectMacro {
     static func getter(
         identifier: TokenSyntax,
         type: TypeSyntax,
+        associatedKey: String,
         policy: ExprSyntax,
         defaultValue: ExprSyntax?
     ) -> AccessorDeclSyntax {
@@ -142,14 +160,14 @@ extension AssociatedObjectMacro {
                     """
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_\(identifier.trimmed)Key
+                        \(raw: associatedKey)
                     ) as? \(type.trimmed) {
                         return value
                     }
                         let value: \(type.trimmed) = \(defaultValue.trimmed)
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_\(identifier.trimmed)Key,
+                            \(raw: associatedKey),
                             value,
                             \(policy.trimmed)
                         )
@@ -159,7 +177,7 @@ extension AssociatedObjectMacro {
                     """
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_\(identifier.trimmed)Key
+                        \(raw: associatedKey)
                     ) as? \(type.trimmed) {
                         return value
                     }
@@ -184,6 +202,7 @@ extension AssociatedObjectMacro {
         identifier: TokenSyntax,
         type: TypeSyntax,
         policy: ExprSyntax,
+        associatedKey: String,
         `willSet`: AccessorDeclSyntax?,
         `didSet`: AccessorDeclSyntax?
     ) -> AccessorDeclSyntax {
@@ -209,7 +228,7 @@ extension AssociatedObjectMacro {
                 """
                 objc_setAssociatedObject(
                     self,
-                    &Self.__associated_\(identifier.trimmed)Key,
+                    \(raw: associatedKey),
                     newValue,
                     \(policy)
                 )

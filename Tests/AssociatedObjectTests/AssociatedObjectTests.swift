@@ -9,6 +9,45 @@ final class AssociatedObjectTests: XCTestCase {
         "AssociatedObject": AssociatedObjectMacro.self
     ]
     
+    func testCustomStoreKey() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN, key: key)
+            var string: String = "text"
+            """,
+            expandedSource:
+            """
+            var string: String = "text" {
+                get {
+                    if let value = objc_getAssociatedObject(
+                        self,
+                        &key
+                    ) as? String {
+                        return value
+                    }
+                    let value: String = "text"
+                    objc_setAssociatedObject(
+                        self,
+                        &key,
+                        value,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                    return value
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &key,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+            """,
+            macros: macros
+        )
+    }
+
     func testString() throws {
         assertMacroExpansion(
             """
