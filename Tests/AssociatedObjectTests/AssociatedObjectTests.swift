@@ -766,7 +766,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_intKey
-                    ) as? Int
+                    ) as? Swift.Int
                     ?? 10
                 }
                 set {
@@ -798,7 +798,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_doubleKey
-                    ) as? Double
+                    ) as? Swift.Double
                     ?? 10.0
                 }
                 set {
@@ -830,7 +830,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_floatKey
-                    ) as? Double
+                    ) as? Swift.Double
                     ?? 10.0
                 }
                 set {
@@ -862,7 +862,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String
+                    ) as? Swift.String
                     ?? "text"
                 }
                 set {
@@ -894,7 +894,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_boolKey
-                    ) as? Bool
+                    ) as? Swift.Bool
                     ?? false
                 }
                 set {
@@ -926,7 +926,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_intArrayKey
-                    ) as? [Int]
+                    ) as? [Swift.Int]
                     ?? [1, 2, 3]
                 }
                 set {
@@ -958,7 +958,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_doubleArrayKey
-                    ) as? [Double]
+                    ) as? [Swift.Double]
                     ?? [1.0, 2.0, 3.0]
                 }
                 set {
@@ -990,7 +990,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_boolArrayKey
-                    ) as? [Bool]
+                    ) as? [Swift.Bool]
                     ?? [true, false]
                 }
                 set {
@@ -1022,7 +1022,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringArrayKey
-                    ) as? [String]
+                    ) as? [Swift.String]
                     ?? ["1.0", "2.0", "3.0"]
                 }
                 set {
@@ -1054,7 +1054,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_optionalIntArrayKey
-                    ) as? [Int?]
+                    ) as? [Swift.Int?]
                     ?? [1, 2, 3, nil]
                 }
                 set {
@@ -1086,7 +1086,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_optionalDoubleArrayKey
-                    ) as? [Double?]
+                    ) as? [Swift.Double?]
                     ?? [1.0, 2.0, 3.0, nil]
                 }
                 set {
@@ -1118,7 +1118,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_optionalBoolArrayKey
-                    ) as? [Bool?]
+                    ) as? [Swift.Bool?]
                     ?? [true, false, nil]
                 }
                 set {
@@ -1150,7 +1150,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_optionalStringArrayKey
-                    ) as? [String?]
+                    ) as? [Swift.String?]
                     ?? ["true", "false", nil]
                 }
                 set {
@@ -1182,7 +1182,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_dicKey
-                    ) as? [String: String]
+                    ) as? [Swift.String: Swift.String]
                     ?? ["t": "a", "s": "b"]
                 }
                 set {
@@ -1214,7 +1214,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_dicKey
-                    ) as? [Int: Int]
+                    ) as? [Swift.Int: Swift.Int]
                     ?? [1: 3, 2: 4]
                 }
                 set {
@@ -1246,7 +1246,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_dicKey
-                    ) as? [Double: Double]
+                    ) as? [Swift.Double: Swift.Double]
                     ?? [1.0: 3.0, 2.0: 4.0]
                 }
                 set {

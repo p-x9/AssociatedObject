@@ -124,13 +124,13 @@ extension AssociatedObjectMacro: AccessorMacro {
         guard let value else { return nil }
         switch value.kind {
         case .stringLiteralExpr:
-            return .init(IdentifierTypeSyntax(name: .identifier("String")))
+            return "Swift.String"
         case .integerLiteralExpr:
-            return .init(IdentifierTypeSyntax(name: .identifier("Int")))
+            return "Swift.Int"
         case .floatLiteralExpr:
-            return .init(IdentifierTypeSyntax(name: .identifier("Double")))
+            return "Swift.Double"
         case .booleanLiteralExpr:
-            return .init(IdentifierTypeSyntax(name: .identifier("Bool")))
+            return "Swift.Bool"
         case .arrayExpr:
             guard let arr = ArrayExprSyntax(value) else { return nil }
             let itemTypes = arr.elements
@@ -154,7 +154,14 @@ extension AssociatedObjectMacro: AccessorMacro {
     }
 
     private static func arrayTypeDetection(_ types: [TypeSyntax?]) -> TypeSyntaxProtocol? {
-        let identifiers = types.map { IdentifierTypeSyntax($0)?.name.text }.removeDuplicate()
+        let identifiers: [String?] = types
+            .map {
+                if let type = $0 {
+                    return "\(type)"
+                } else {
+                    return nil
+                }
+            }.removeDuplicate()
         if identifiers.count == 1, let type = types.first as? TypeSyntax {
             return type
         } else if identifiers.filter({ $0 != nil }).count == 1, let type = types.first(where: { !($0?.isOptional ?? true) }) as? TypeSyntax {
