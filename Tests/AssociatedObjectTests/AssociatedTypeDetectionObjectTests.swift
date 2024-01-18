@@ -13,6 +13,7 @@ import SwiftSyntaxMacrosTestSupport
 @testable import AssociatedObject
 
 // MARK: - TypeDetection
+// thanks: https://github.com/mlch911
 final class AssociatedTypeDetectionObjectTests: XCTestCase {
     let macros: [String: Macro.Type] = [
         "AssociatedObject": AssociatedObjectMacro.self
