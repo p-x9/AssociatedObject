@@ -65,14 +65,14 @@ extension AssociatedObjectMacro: AccessorMacro {
         }
 
         let defaultValue = binding.initializer?.value
-        let varType: TypeSyntax
+        let type: TypeSyntax
 
-        if let type = binding.typeAnnotation?.type {
+        if let specifiedType = binding.typeAnnotation?.type {
             //  TypeAnnotation
-            varType = type
-        } else if let type = typeDetection(defaultValue) {
+            type = specifiedType
+        } else if let detectedType = defaultValue?.detectedTypeByLiteral {
             //  TypeDetection
-            varType = type
+            type = detectedType
         } else {
             //  Explicit specification of type is required
             context.diagnose(AssociatedObjectMacroDiagnostic.specifyTypeExplicitly.diagnose(at: identifier))
@@ -92,7 +92,7 @@ extension AssociatedObjectMacro: AccessorMacro {
         }
 
         // Initial value required if type is optional
-        if defaultValue == nil && !varType.isOptional {
+        if defaultValue == nil && !type.isOptional {
             context.diagnose(AssociatedObjectMacroDiagnostic.requiresInitialValue.diagnose(at: declaration))
             return []
         }
@@ -106,77 +106,18 @@ extension AssociatedObjectMacro: AccessorMacro {
         return [
             Self.getter(
                 identifier: identifier,
-                type: varType,
+                type: type,
                 defaultValue: defaultValue
             ),
 
             Self.setter(
                 identifier: identifier,
-                type: varType,
+                type: type,
                 policy: policy,
                 willSet: binding.willSet,
                 didSet: binding.didSet
             )
         ]
-    }
-
-    private static func typeDetection(_ value: ExprSyntax?) -> TypeSyntax? {
-        guard let value else { return nil }
-        switch value.kind {
-        case .stringLiteralExpr:
-            return "Swift.String"
-        case .integerLiteralExpr:
-            return "Swift.Int"
-        case .floatLiteralExpr:
-            return "Swift.Double"
-        case .booleanLiteralExpr:
-            return "Swift.Bool"
-        case .arrayExpr:
-            guard let arr = ArrayExprSyntax(value) else { return nil }
-            let itemTypes = arr.elements
-                .map(\.expression)
-                .map(typeDetection(_:))
-            guard let itemType = arrayTypeDetection(itemTypes) else { return nil }
-            return .init(ArrayTypeSyntax(element: itemType))
-        case .dictionaryExpr:
-            guard let dic = DictionaryExprSyntax(value), case let .elements(list) = dic.content else { return nil }
-            let keyTypes = list
-                .map(\.key)
-                .map(typeDetection(_:))
-            let valueTypes = list
-                .map(\.value)
-                .map(typeDetection(_:))
-            guard let keyType = arrayTypeDetection(keyTypes), let valueType = arrayTypeDetection(valueTypes) else { return nil }
-            return .init(DictionaryTypeSyntax(key: keyType, value: valueType))
-        default:
-            return nil
-        }
-    }
-
-    private static func arrayTypeDetection(_ types: [TypeSyntax?]) -> TypeSyntaxProtocol? {
-        let identifiers: [String?] = types
-            .map {
-                if let type = $0 {
-                    return "\(type)"
-                } else {
-                    return nil
-                }
-            }.removeDuplicate()
-        if identifiers.count == 1, let type = types.first as? TypeSyntax {
-            return type
-        } else if identifiers.filter({ $0 != nil }).count == 1, let type = types.first(where: { !($0?.isOptional ?? true) }) as? TypeSyntax {
-            return OptionalTypeSyntax(wrappedType: type)
-        } else {
-            return nil
-        }
-    }
-}
-
-private extension Array where Element: Equatable {
-    func removeDuplicate() -> Array {
-        return enumerated().filter { index, value -> Bool in
-            firstIndex(where: { $0 == value }) == index
-        }.map { $0.element }
     }
 }
 
