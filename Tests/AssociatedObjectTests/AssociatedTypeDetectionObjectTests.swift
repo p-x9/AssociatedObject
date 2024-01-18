@@ -576,3 +576,39 @@ extension AssociatedTypeDetectionObjectTests {
         )
     }
 }
+
+
+// MARK: - Other
+extension AssociatedTypeDetectionObjectTests {
+    func testTypeDetection2DimensionDoubleArray() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            var array = [[1.0], [2.0], [3.0, 4.0]]
+            """,
+            expandedSource:
+            """
+            var array = [[1.0], [2.0], [3.0, 4.0]] {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_arrayKey
+                    ) as? [[Swift.Double]]
+                    ?? [[1.0], [2.0], [3.0, 4.0]]
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_arrayKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+
+            static var __associated_arrayKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+}
