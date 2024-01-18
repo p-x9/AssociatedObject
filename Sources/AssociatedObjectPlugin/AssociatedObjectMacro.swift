@@ -63,9 +63,9 @@ extension AssociatedObjectMacro: AccessorMacro {
             context.diagnose(AssociatedObjectMacroDiagnostic.multipleVariableDeclarationIsNotSupported.diagnose(at: binding))
             return []
         }
-		
-		let defaultValue = binding.initializer?.value
-		let varType: TypeSyntax
+
+        let defaultValue = binding.initializer?.value
+        let varType: TypeSyntax
 
         if let type = binding.typeAnnotation?.type {
             //  TypeAnnotation
@@ -119,7 +119,7 @@ extension AssociatedObjectMacro: AccessorMacro {
             )
         ]
     }
-    
+
     private static func typeDetection(_ value: ExprSyntax?) -> TypeSyntax? {
         guard let value else { return nil }
         switch value.kind {
@@ -152,7 +152,7 @@ extension AssociatedObjectMacro: AccessorMacro {
             return nil
         }
     }
-    
+
     private static func arrayTypeDetection(_ types: [TypeSyntax?]) -> TypeSyntaxProtocol? {
         let identifiers = types.map { IdentifierTypeSyntax($0)?.name.text }.removeDuplicate()
         if identifiers.count == 1, let type = types.first as? TypeSyntax {
@@ -257,7 +257,7 @@ extension AssociatedObjectMacro {
             }
         )
     }
-    
+
     /// `willSet` closure
     ///
     /// Convert a willSet accessor to a closure variable in the following format.
@@ -373,7 +373,7 @@ extension AssociatedObjectMacro {
             }
         )
     }
-    
+
     /// Execute willSet closure
     ///
     /// ```swift
@@ -392,7 +392,7 @@ extension AssociatedObjectMacro {
             }
         )
     }
-    
+
     /// Execute didSet closure
     ///
     /// ```swift

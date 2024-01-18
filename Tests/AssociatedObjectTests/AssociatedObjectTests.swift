@@ -264,7 +264,7 @@ final class AssociatedObjectTests: XCTestCase {
             macros: macros
         )
     }
-    
+
     func testIntArray() throws {
         assertMacroExpansion(
             """
@@ -290,7 +290,7 @@ final class AssociatedObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_intArrayKey: UInt8 = 0
             """,
             macros: macros
@@ -328,7 +328,7 @@ final class AssociatedObjectTests: XCTestCase {
             macros: macros
         )
     }
-    
+
     func testDictionary() throws {
         assertMacroExpansion(
             """
@@ -354,7 +354,7 @@ final class AssociatedObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_dicKey: UInt8 = 0
             """,
             macros: macros
@@ -752,7 +752,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
     let macros: [String: Macro.Type] = [
         "AssociatedObject": AssociatedObjectMacro.self
     ]
-    
+
     func testTypeDetectionInt() throws {
         assertMacroExpansion(
             """
@@ -778,13 +778,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_intKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionDouble() throws {
         assertMacroExpansion(
             """
@@ -810,13 +810,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_doubleKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionFloat() throws {
         assertMacroExpansion(
             """
@@ -842,13 +842,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_floatKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionString() throws {
         assertMacroExpansion(
             """
@@ -874,13 +874,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_stringKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionBool() throws {
         assertMacroExpansion(
             """
@@ -906,13 +906,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_boolKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionIntArray() throws {
         assertMacroExpansion(
             """
@@ -938,13 +938,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_intArrayKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionDoubleArray() throws {
         assertMacroExpansion(
             """
@@ -970,13 +970,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_doubleArrayKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionBoolArray() throws {
         assertMacroExpansion(
             """
@@ -1002,13 +1002,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_boolArrayKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionStringArray() throws {
         assertMacroExpansion(
             """
@@ -1034,13 +1034,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_stringArrayKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionOptionalIntArray() throws {
         assertMacroExpansion(
             """
@@ -1066,13 +1066,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_optionalIntArrayKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionOptionalDoubleArray() throws {
         assertMacroExpansion(
             """
@@ -1098,13 +1098,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_optionalDoubleArrayKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionOptionalBoolArray() throws {
         assertMacroExpansion(
             """
@@ -1130,13 +1130,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_optionalBoolArrayKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionOptionalStringArray() throws {
         assertMacroExpansion(
             """
@@ -1162,13 +1162,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_optionalStringArrayKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionStringDictionary() throws {
         assertMacroExpansion(
             """
@@ -1194,13 +1194,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_dicKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionIntDictionary() throws {
         assertMacroExpansion(
             """
@@ -1226,13 +1226,13 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_dicKey: UInt8 = 0
             """,
             macros: macros
         )
     }
-    
+
     func testTypeDetectionDoubleDictionary() throws {
         assertMacroExpansion(
             """
@@ -1258,7 +1258,7 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
                     )
                 }
             }
-            
+
             static var __associated_dicKey: UInt8 = 0
             """,
             macros: macros
