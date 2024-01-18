@@ -64,8 +64,17 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        //  Explicit specification of type is required
-        guard let type = binding.typeAnnotation?.type else {
+        let defaultValue = binding.initializer?.value
+        let type: TypeSyntax
+
+        if let specifiedType = binding.typeAnnotation?.type {
+            //  TypeAnnotation
+            type = specifiedType
+        } else if let detectedType = defaultValue?.detectedTypeByLiteral {
+            //  TypeDetection
+            type = detectedType
+        } else {
+            //  Explicit specification of type is required
             context.diagnose(AssociatedObjectMacroDiagnostic.specifyTypeExplicitly.diagnose(at: identifier))
             return []
         }
@@ -82,7 +91,6 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        let defaultValue = binding.initializer?.value
         // Initial value required if type is optional
         if defaultValue == nil && !type.isOptional {
             context.diagnose(AssociatedObjectMacroDiagnostic.requiresInitialValue.diagnose(at: declaration))
@@ -197,7 +205,7 @@ extension AssociatedObjectMacro {
             }
         )
     }
-    
+
     /// `willSet` closure
     ///
     /// Convert a willSet accessor to a closure variable in the following format.
@@ -313,7 +321,7 @@ extension AssociatedObjectMacro {
             }
         )
     }
-    
+
     /// Execute willSet closure
     ///
     /// ```swift
@@ -332,7 +340,7 @@ extension AssociatedObjectMacro {
             }
         )
     }
-    
+
     /// Execute didSet closure
     ///
     /// ```swift

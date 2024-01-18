@@ -41,6 +41,70 @@ final class AssociatedObjectTests: XCTestCase {
         )
     }
 
+    func testInt() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            var int: Int = 5
+            """,
+            expandedSource:
+            """
+            var int: Int = 5 {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_intKey
+                    ) as? Int
+                    ?? 5
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_intKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+
+            static var __associated_intKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+
+    func testFloat() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            var float: Float = 5.0
+            """,
+            expandedSource:
+            """
+            var float: Float = 5.0 {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_floatKey
+                    ) as? Float
+                    ?? 5.0
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_floatKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+
+            static var __associated_floatKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+
     func testDouble() throws {
         assertMacroExpansion(
             """
@@ -164,6 +228,134 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+
+    func testBool() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            var bool: Bool = false
+            """,
+            expandedSource:
+            """
+            var bool: Bool = false {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_boolKey
+                    ) as? Bool
+                    ?? false
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_boolKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+
+            static var __associated_boolKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+
+    func testIntArray() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            var intArray: [Int] = [1, 2, 3]
+            """,
+            expandedSource:
+            """
+            var intArray: [Int] = [1, 2, 3] {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_intArrayKey
+                    ) as? [Int]
+                    ?? [1, 2, 3]
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_intArrayKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+
+            static var __associated_intArrayKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+
+    func testOptionalBool() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            var bool: Bool?
+            """,
+            expandedSource:
+            """
+            var bool: Bool? {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_boolKey
+                    ) as? Bool?
+                    ?? nil
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_boolKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+
+            static var __associated_boolKey: UInt8 = 0
+            """,
+            macros: macros
+        )
+    }
+
+    func testDictionary() throws {
+        assertMacroExpansion(
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            var dic: [String: String] = ["t": "a"]
+            """,
+            expandedSource:
+            """
+            var dic: [String: String] = ["t": "a"] {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_dicKey
+                    ) as? [String: String]
+                    ?? ["t": "a"]
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_dicKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+
+            static var __associated_dicKey: UInt8 = 0
             """,
             macros: macros
         )
@@ -533,11 +725,11 @@ final class AssociatedObjectTests: XCTestCase {
         assertMacroExpansion(
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
-            var string = "text"
+            var string = ["text", 123]
             """,
             expandedSource:
             """
-            var string = "text"
+            var string = ["text", 123]
 
             static var __associated_stringKey: UInt8 = 0
             """,
