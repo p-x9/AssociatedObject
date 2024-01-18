@@ -1,21 +1,26 @@
 import XCTest
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
+import MacroTesting
 @testable import AssociatedObjectPlugin
 @testable import AssociatedObject
 
 final class AssociatedObjectTests: XCTestCase {
-    let macros: [String: Macro.Type] = [
-        "AssociatedObject": AssociatedObjectMacro.self
-    ]
-    
+    override func invokeTest() {
+        withMacroTesting(
+            macros: ["AssociatedObject": AssociatedObjectMacro.self]
+        ) {
+            super.invokeTest()
+        }
+    }
+
     func testString() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String = "text"
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: String = "text" {
                 get {
@@ -45,18 +50,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testInt() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var int: Int = 5
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var int: Int = 5 {
                 get {
@@ -86,18 +90,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_intKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testFloat() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var float: Float = 5.0
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var float: Float = 5.0 {
                 get {
@@ -127,18 +130,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_floatKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testDouble() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var double: Double = 5.0
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var double: Double = 5.0 {
                 get {
@@ -168,18 +170,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_doubleKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testStringWithOtherPolicy() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_COPY)
             var string: String = "text"
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: String = "text" {
                 get {
@@ -209,18 +210,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testOptionalString() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String?
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: String? {
                 get {
@@ -243,18 +243,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testOptionalGenericsString() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: Optional<String>
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: Optional<String> {
                 get {
@@ -277,18 +276,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testBool() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var bool: Bool = false
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var bool: Bool = false {
                 get {
@@ -318,18 +316,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_boolKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testIntArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var intArray: [Int] = [1, 2, 3]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var intArray: [Int] = [1, 2, 3] {
                 get {
@@ -359,18 +356,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_intArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testOptionalBool() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var bool: Bool?
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var bool: Bool? {
                 get {
@@ -393,18 +389,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_boolKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testDictionary() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var dic: [String: String] = ["t": "a"]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var dic: [String: String] = ["t": "a"] {
                 get {
@@ -434,13 +429,12 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_dicKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testWillSet() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String = "text" {
@@ -449,8 +443,8 @@ final class AssociatedObjectTests: XCTestCase {
                     print("willSet: new", newValue)
                 }
             }
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: String = "text" {
                 willSet {
@@ -491,13 +485,12 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testDidSet() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String = "text" {
@@ -505,8 +498,8 @@ final class AssociatedObjectTests: XCTestCase {
                     print("didSet: old", oldValue)
                 }
             }
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: String = "text" {
                 didSet {
@@ -546,13 +539,12 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testWillSetAndDidSet() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String = "text" {
@@ -564,8 +556,8 @@ final class AssociatedObjectTests: XCTestCase {
                     print("didSet: old", oldValue)
                 }
             }
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: String = "text" {
                 willSet {
@@ -615,13 +607,12 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testWillSetWithArgument() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String = "text" {
@@ -630,8 +621,8 @@ final class AssociatedObjectTests: XCTestCase {
                     print("willSet: new", new)
                 }
             }
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: String = "text" {
                 willSet(new) {
@@ -672,13 +663,12 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testDidSetWithArgument() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String = "text" {
@@ -686,8 +676,8 @@ final class AssociatedObjectTests: XCTestCase {
                     print("didSet: old", old)
                 }
             }
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: String = "text" {
                 didSet(old) {
@@ -727,18 +717,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testModernWritingStyle() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.copy(.nonatomic))
             var string: String = "text"
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string: String = "text" {
                 get {
@@ -768,113 +757,76 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     // MARK: Diagnostics test
     func testDiagnosticsDeclarationType() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             struct Item {}
-            """,
-            expandedSource:
             """
+        } diagnostics: {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            ╰─ 🛑 `@AssociatedObject` must be attached to the property declaration.
             struct Item {}
-            """,
-            diagnostics: [
-                DiagnosticSpec(
-                    message: AssociatedObjectMacroDiagnostic
-                        .requiresVariableDeclaration
-                        .message,
-                    line: 1,
-                    column: 1
-                )
-            ],
-            macros: macros
-        )
+            """
+        }
     }
 
     func testDiagnosticsGetterAndSetter() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String? {
                 get { "" }
                 set {}
             }
-            """,
-            expandedSource:
             """
+        } diagnostics: {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String? {
                 get { "" }
                 set {}
+                ┬─────
+                ╰─ 🛑 getter and setter must not be implemented when using `@AssociatedObject`.
             }
-
-            static var __associated_stringKey: UInt8 = 0
-            """,
-            diagnostics: [
-                DiagnosticSpec(
-                    message: AssociatedObjectMacroDiagnostic
-                        .getterAndSetterShouldBeNil
-                        .message,
-                    line: 4,
-                    column: 5
-                )
-            ],
-            macros: macros
-        )
+            """
+        }
     }
 
     func testDiagnosticsInitialValue() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string: String
-            """,
-            expandedSource:
             """
+        } diagnostics: {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            ╰─ 🛑 Initial values must be specified when using `@AssociatedObject`.
             var string: String
-
-            static var __associated_stringKey: UInt8 = 0
-            """,
-            diagnostics: [
-                DiagnosticSpec(
-                    message: AssociatedObjectMacroDiagnostic
-                        .requiresInitialValue
-                        .message,
-                    line: 1,
-                    column: 1
-                )
-            ],
-            macros: macros
-        )
+            """
+        }
     }
 
     func testDiagnosticsSpecifyType() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string = ["text", 123]
-            """,
-            expandedSource:
             """
+        } diagnostics: {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string = ["text", 123]
-
-            static var __associated_stringKey: UInt8 = 0
-            """,
-            diagnostics: [
-                DiagnosticSpec(
-                    message: AssociatedObjectMacroDiagnostic
-                        .specifyTypeExplicitly
-                        .message,
-                    line: 2,
-                    column: 5
-                )
-            ],
-            macros: macros
-        )
+                ┬─────
+                ╰─ 🛑 Specify a type explicitly when using `@AssociatedObject`.
+            """
+        }
     }
 }

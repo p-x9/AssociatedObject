@@ -3,32 +3,37 @@
 //
 //
 //  Created by p-x9 on 2024/01/18.
-//  
+//
 //
 
 import XCTest
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
+import MacroTesting
 @testable import AssociatedObjectPlugin
 @testable import AssociatedObject
 
 // MARK: - TypeDetection
 // thanks: https://github.com/mlch911
 final class AssociatedTypeDetectionObjectTests: XCTestCase {
-    let macros: [String: Macro.Type] = [
-        "AssociatedObject": AssociatedObjectMacro.self
-    ]
+    override func invokeTest() {
+        withMacroTesting(
+            macros: ["AssociatedObject": AssociatedObjectMacro.self]
+        ) {
+            super.invokeTest()
+        }
+    }
 }
 
 // MARK: - Simple Types
 extension AssociatedTypeDetectionObjectTests {
     func testTypeDetectionInt() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var int = 10
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var int = 10 {
                 get {
@@ -58,18 +63,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_intKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionDouble() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var double = 10.0
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var double = 10.0 {
                 get {
@@ -99,18 +103,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_doubleKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionString() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var string = "text"
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var string = "text" {
                 get {
@@ -140,18 +143,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_stringKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionBool() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var bool = false
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var bool = false {
                 get {
@@ -181,21 +183,20 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_boolKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 }
 
 // MARK: - Array
 extension AssociatedTypeDetectionObjectTests {
     func testTypeDetectionIntArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var intArray = [1, 2, 3]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var intArray = [1, 2, 3] {
                 get {
@@ -225,18 +226,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_intArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionDoubleArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var doubleArray = [1.0, 2.0, 3.0]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var doubleArray = [1.0, 2.0, 3.0] {
                 get {
@@ -266,18 +266,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_doubleArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionIntAndDoubleArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var doubleArray = [1, 1.0, 2, 2.0, 3, 3.0]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var doubleArray = [1, 1.0, 2, 2.0, 3, 3.0] {
                 get {
@@ -307,18 +306,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_doubleArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionBoolArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var boolArray = [true, false]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var boolArray = [true, false] {
                 get {
@@ -348,18 +346,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_boolArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionStringArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var stringArray = ["1.0", "2.0", "3.0"]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var stringArray = ["1.0", "2.0", "3.0"] {
                 get {
@@ -389,21 +386,20 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_stringArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 }
 
 // MARK: - Array with optional Elements
 extension AssociatedTypeDetectionObjectTests {
     func testTypeDetectionOptionalIntArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var optionalIntArray = [1, 1, nil, 2, 3, nil]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var optionalIntArray = [1, 1, nil, 2, 3, nil] {
                 get {
@@ -433,18 +429,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_optionalIntArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionOptionalDoubleArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var optionalDoubleArray = [1.0, 2.0, 3.0, nil]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var optionalDoubleArray = [1.0, 2.0, 3.0, nil] {
                 get {
@@ -474,18 +469,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_optionalDoubleArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionOptionalIntAndDoubleArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var doubleArray = [nil, 1, 1.0, nil, 2, 2.0, nil, 3, 3.0]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var doubleArray = [nil, 1, 1.0, nil, 2, 2.0, nil, 3, 3.0] {
                 get {
@@ -515,19 +509,18 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_doubleArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
 
     func testTypeDetectionOptionalBoolArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var optionalBoolArray = [true, false, nil]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var optionalBoolArray = [true, false, nil] {
                 get {
@@ -557,18 +550,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_optionalBoolArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionOptionalStringArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var optionalStringArray = [nil, "true", "false", nil]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var optionalStringArray = [nil, "true", "false", nil] {
                 get {
@@ -598,21 +590,20 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_optionalStringArrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 }
 
 // MARK: - Dictionary
 extension AssociatedTypeDetectionObjectTests {
     func testTypeDetectionStringDictionary() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var dic = ["t": "a", "s": "b"]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var dic = ["t": "a", "s": "b"] {
                 get {
@@ -642,18 +633,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_dicKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionIntDictionary() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var dic = [1: 3, 2: 4]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var dic = [1: 3, 2: 4] {
                 get {
@@ -683,18 +673,17 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_dicKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 
     func testTypeDetectionDoubleDictionary() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var dic = [1.0: 3.0, 2.0: 4.0]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var dic = [1.0: 3.0, 2.0: 4.0] {
                 get {
@@ -724,9 +713,8 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_dicKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 }
 
@@ -734,12 +722,12 @@ extension AssociatedTypeDetectionObjectTests {
 // MARK: - Other
 extension AssociatedTypeDetectionObjectTests {
     func testTypeDetection2DimensionDoubleArray() throws {
-        assertMacroExpansion(
+        assertMacro {
             """
             @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
             var array = [[1.0], [2.0], [3.0, 4.0]]
-            """,
-            expandedSource:
+            """
+        } expansion: {
             """
             var array = [[1.0], [2.0], [3.0, 4.0]] {
                 get {
@@ -769,8 +757,7 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             static var __associated_arrayKey: UInt8 = 0
-            """,
-            macros: macros
-        )
+            """
+        }
     }
 }
