@@ -42,15 +42,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_intKey
                     ) as? Swift.Int {
                         return value
+                    } else {
+                        let value: Swift.Int = 10
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_intKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: Swift.Int = 10
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_intKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -82,15 +83,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_doubleKey
                     ) as? Swift.Double {
                         return value
+                    } else {
+                        let value: Swift.Double = 10.0
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_doubleKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: Swift.Double = 10.0
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_doubleKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -122,15 +124,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_stringKey
                     ) as? Swift.String {
                         return value
+                    } else {
+                        let value: Swift.String = "text"
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_stringKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: Swift.String = "text"
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_stringKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -162,15 +165,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_boolKey
                     ) as? Swift.Bool {
                         return value
+                    } else {
+                        let value: Swift.Bool = false
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_boolKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: Swift.Bool = false
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_boolKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -205,15 +209,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_intArrayKey
                     ) as? [Swift.Int] {
                         return value
+                    } else {
+                        let value: [Swift.Int] = [1, 2, 3]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_intArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Int] = [1, 2, 3]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_intArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -245,15 +250,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_doubleArrayKey
                     ) as? [Swift.Double] {
                         return value
+                    } else {
+                        let value: [Swift.Double] = [1.0, 2.0, 3.0]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_doubleArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Double] = [1.0, 2.0, 3.0]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_doubleArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -285,15 +291,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_doubleArrayKey
                     ) as? [Swift.Double] {
                         return value
+                    } else {
+                        let value: [Swift.Double] = [1, 1.0, 2, 2.0, 3, 3.0]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_doubleArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Double] = [1, 1.0, 2, 2.0, 3, 3.0]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_doubleArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -325,15 +332,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_boolArrayKey
                     ) as? [Swift.Bool] {
                         return value
+                    } else {
+                        let value: [Swift.Bool] = [true, false]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_boolArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Bool] = [true, false]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_boolArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -365,15 +373,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_stringArrayKey
                     ) as? [Swift.String] {
                         return value
+                    } else {
+                        let value: [Swift.String] = ["1.0", "2.0", "3.0"]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_stringArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.String] = ["1.0", "2.0", "3.0"]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_stringArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -408,15 +417,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_optionalIntArrayKey
                     ) as? [Swift.Int?] {
                         return value
+                    } else {
+                        let value: [Swift.Int?] = [1, 1, nil, 2, 3, nil]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_optionalIntArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Int?] = [1, 1, nil, 2, 3, nil]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_optionalIntArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -448,15 +458,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_optionalDoubleArrayKey
                     ) as? [Swift.Double?] {
                         return value
+                    } else {
+                        let value: [Swift.Double?] = [1.0, 2.0, 3.0, nil]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_optionalDoubleArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Double?] = [1.0, 2.0, 3.0, nil]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_optionalDoubleArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -488,15 +499,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_doubleArrayKey
                     ) as? [Swift.Double?] {
                         return value
+                    } else {
+                        let value: [Swift.Double?] = [nil, 1, 1.0, nil, 2, 2.0, nil, 3, 3.0]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_doubleArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Double?] = [nil, 1, 1.0, nil, 2, 2.0, nil, 3, 3.0]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_doubleArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -529,15 +541,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_optionalBoolArrayKey
                     ) as? [Swift.Bool?] {
                         return value
+                    } else {
+                        let value: [Swift.Bool?] = [true, false, nil]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_optionalBoolArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Bool?] = [true, false, nil]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_optionalBoolArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -569,15 +582,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_optionalStringArrayKey
                     ) as? [Swift.String?] {
                         return value
+                    } else {
+                        let value: [Swift.String?] = [nil, "true", "false", nil]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_optionalStringArrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.String?] = [nil, "true", "false", nil]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_optionalStringArrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -612,15 +626,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_dicKey
                     ) as? [Swift.String: Swift.String] {
                         return value
+                    } else {
+                        let value: [Swift.String: Swift.String] = ["t": "a", "s": "b"]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_dicKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.String:Swift.String] = ["t": "a", "s": "b"]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_dicKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -652,15 +667,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_dicKey
                     ) as? [Swift.Int: Swift.Int] {
                         return value
+                    } else {
+                        let value: [Swift.Int: Swift.Int] = [1: 3, 2: 4]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_dicKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Int:Swift.Int] = [1: 3, 2: 4]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_dicKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -692,15 +708,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_dicKey
                     ) as? [Swift.Double: Swift.Double] {
                         return value
+                    } else {
+                        let value: [Swift.Double: Swift.Double] = [1.0: 3.0, 2.0: 4.0]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_dicKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [Swift.Double:Swift.Double] = [1.0: 3.0, 2.0: 4.0]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_dicKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
@@ -736,15 +753,16 @@ extension AssociatedTypeDetectionObjectTests {
                         &Self.__associated_arrayKey
                     ) as? [[Swift.Double]] {
                         return value
+                    } else {
+                        let value: [[Swift.Double]] = [[1.0], [2.0], [3.0, 4.0]]
+                        objc_setAssociatedObject(
+                            self,
+                            &Self.__associated_arrayKey,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
                     }
-                    let value: [[Swift.Double]] = [[1.0], [2.0], [3.0, 4.0]]
-                    objc_setAssociatedObject(
-                        self,
-                        &Self.__associated_arrayKey,
-                        value,
-                        .OBJC_ASSOCIATION_ASSIGN
-                    )
-                    return value
                 }
                 set {
                     objc_setAssociatedObject(
