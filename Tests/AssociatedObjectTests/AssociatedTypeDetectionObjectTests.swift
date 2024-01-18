@@ -18,7 +18,10 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
     let macros: [String: Macro.Type] = [
         "AssociatedObject": AssociatedObjectMacro.self
     ]
+}
 
+// MARK: - Simple Types
+extension AssociatedTypeDetectionObjectTests {
     func testTypeDetectionInt() throws {
         assertMacroExpansion(
             """
@@ -146,7 +149,10 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
             macros: macros
         )
     }
+}
 
+// MARK: - Array
+extension AssociatedTypeDetectionObjectTests {
     func testTypeDetectionIntArray() throws {
         assertMacroExpansion(
             """
@@ -306,7 +312,10 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
             macros: macros
         )
     }
+}
 
+// MARK: - Array with optional Elements
+extension AssociatedTypeDetectionObjectTests {
     func testTypeDetectionOptionalIntArray() throws {
         assertMacroExpansion(
             """
@@ -467,7 +476,10 @@ final class AssociatedTypeDetectionObjectTests: XCTestCase {
             macros: macros
         )
     }
+}
 
+// MARK: - Dictionary
+extension AssociatedTypeDetectionObjectTests {
     func testTypeDetectionStringDictionary() throws {
         assertMacroExpansion(
             """
