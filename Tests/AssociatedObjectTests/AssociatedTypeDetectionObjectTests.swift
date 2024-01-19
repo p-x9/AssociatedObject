@@ -18,6 +18,7 @@ import MacroTesting
 final class AssociatedTypeDetectionObjectTests: XCTestCase {
     override func invokeTest() {
         withMacroTesting(
+//            isRecording: true,
             macros: ["AssociatedObject": AssociatedObjectMacro.self]
         ) {
             super.invokeTest()
@@ -39,14 +40,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_intKey
+                        Self.__associated_intKey
                     ) as? Swift.Int {
                         return value
                     } else {
                         let value: Swift.Int = 10
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_intKey,
+                            Self.__associated_intKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -56,14 +57,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_intKey,
+                        Self.__associated_intKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_intKey: UInt8 = 0
+            static var __associated_intKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_3intfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -80,14 +86,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_doubleKey
+                        Self.__associated_doubleKey
                     ) as? Swift.Double {
                         return value
                     } else {
                         let value: Swift.Double = 10.0
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_doubleKey,
+                            Self.__associated_doubleKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -97,14 +103,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_doubleKey,
+                        Self.__associated_doubleKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_doubleKey: UInt8 = 0
+            static var __associated_doubleKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_6doublefMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -121,14 +132,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_stringKey
+                        Self.__associated_stringKey
                     ) as? Swift.String {
                         return value
                     } else {
                         let value: Swift.String = "text"
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_stringKey,
+                            Self.__associated_stringKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -138,14 +149,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_stringKey,
+                        Self.__associated_stringKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_stringKey: UInt8 = 0
+            static var __associated_stringKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_6stringfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -162,14 +178,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_boolKey
+                        Self.__associated_boolKey
                     ) as? Swift.Bool {
                         return value
                     } else {
                         let value: Swift.Bool = false
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_boolKey,
+                            Self.__associated_boolKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -179,14 +195,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_boolKey,
+                        Self.__associated_boolKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_boolKey: UInt8 = 0
+            static var __associated_boolKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_4boolfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -206,14 +227,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_intArrayKey
+                        Self.__associated_intArrayKey
                     ) as? [Swift.Int] {
                         return value
                     } else {
                         let value: [Swift.Int] = [1, 2, 3]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_intArrayKey,
+                            Self.__associated_intArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -223,14 +244,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_intArrayKey,
+                        Self.__associated_intArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_intArrayKey: UInt8 = 0
+            static var __associated_intArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_8intArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -247,14 +273,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_doubleArrayKey
+                        Self.__associated_doubleArrayKey
                     ) as? [Swift.Double] {
                         return value
                     } else {
                         let value: [Swift.Double] = [1.0, 2.0, 3.0]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_doubleArrayKey,
+                            Self.__associated_doubleArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -264,14 +290,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_doubleArrayKey,
+                        Self.__associated_doubleArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_doubleArrayKey: UInt8 = 0
+            static var __associated_doubleArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_11doubleArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -288,14 +319,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_doubleArrayKey
+                        Self.__associated_doubleArrayKey
                     ) as? [Swift.Double] {
                         return value
                     } else {
                         let value: [Swift.Double] = [1, 1.0, 2, 2.0, 3, 3.0]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_doubleArrayKey,
+                            Self.__associated_doubleArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -305,14 +336,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_doubleArrayKey,
+                        Self.__associated_doubleArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_doubleArrayKey: UInt8 = 0
+            static var __associated_doubleArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_11doubleArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -329,14 +365,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_boolArrayKey
+                        Self.__associated_boolArrayKey
                     ) as? [Swift.Bool] {
                         return value
                     } else {
                         let value: [Swift.Bool] = [true, false]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_boolArrayKey,
+                            Self.__associated_boolArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -346,14 +382,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_boolArrayKey,
+                        Self.__associated_boolArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_boolArrayKey: UInt8 = 0
+            static var __associated_boolArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_9boolArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -370,14 +411,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_stringArrayKey
+                        Self.__associated_stringArrayKey
                     ) as? [Swift.String] {
                         return value
                     } else {
                         let value: [Swift.String] = ["1.0", "2.0", "3.0"]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_stringArrayKey,
+                            Self.__associated_stringArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -387,14 +428,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_stringArrayKey,
+                        Self.__associated_stringArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_stringArrayKey: UInt8 = 0
+            static var __associated_stringArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_11stringArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -414,14 +460,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_optionalIntArrayKey
+                        Self.__associated_optionalIntArrayKey
                     ) as? [Swift.Int?] {
                         return value
                     } else {
                         let value: [Swift.Int?] = [1, 1, nil, 2, 3, nil]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_optionalIntArrayKey,
+                            Self.__associated_optionalIntArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -431,14 +477,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_optionalIntArrayKey,
+                        Self.__associated_optionalIntArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_optionalIntArrayKey: UInt8 = 0
+            static var __associated_optionalIntArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_16optionalIntArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -455,14 +506,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_optionalDoubleArrayKey
+                        Self.__associated_optionalDoubleArrayKey
                     ) as? [Swift.Double?] {
                         return value
                     } else {
                         let value: [Swift.Double?] = [1.0, 2.0, 3.0, nil]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_optionalDoubleArrayKey,
+                            Self.__associated_optionalDoubleArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -472,14 +523,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_optionalDoubleArrayKey,
+                        Self.__associated_optionalDoubleArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_optionalDoubleArrayKey: UInt8 = 0
+            static var __associated_optionalDoubleArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_19optionalDoubleArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -496,14 +552,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_doubleArrayKey
+                        Self.__associated_doubleArrayKey
                     ) as? [Swift.Double?] {
                         return value
                     } else {
                         let value: [Swift.Double?] = [nil, 1, 1.0, nil, 2, 2.0, nil, 3, 3.0]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_doubleArrayKey,
+                            Self.__associated_doubleArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -513,14 +569,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_doubleArrayKey,
+                        Self.__associated_doubleArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_doubleArrayKey: UInt8 = 0
+            static var __associated_doubleArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_11doubleArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -538,14 +599,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_optionalBoolArrayKey
+                        Self.__associated_optionalBoolArrayKey
                     ) as? [Swift.Bool?] {
                         return value
                     } else {
                         let value: [Swift.Bool?] = [true, false, nil]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_optionalBoolArrayKey,
+                            Self.__associated_optionalBoolArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -555,14 +616,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_optionalBoolArrayKey,
+                        Self.__associated_optionalBoolArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_optionalBoolArrayKey: UInt8 = 0
+            static var __associated_optionalBoolArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_17optionalBoolArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -579,14 +645,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_optionalStringArrayKey
+                        Self.__associated_optionalStringArrayKey
                     ) as? [Swift.String?] {
                         return value
                     } else {
                         let value: [Swift.String?] = [nil, "true", "false", nil]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_optionalStringArrayKey,
+                            Self.__associated_optionalStringArrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -596,14 +662,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_optionalStringArrayKey,
+                        Self.__associated_optionalStringArrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_optionalStringArrayKey: UInt8 = 0
+            static var __associated_optionalStringArrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_19optionalStringArrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -623,14 +694,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_dicKey
+                        Self.__associated_dicKey
                     ) as? [Swift.String: Swift.String] {
                         return value
                     } else {
                         let value: [Swift.String: Swift.String] = ["t": "a", "s": "b"]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_dicKey,
+                            Self.__associated_dicKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -640,14 +711,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_dicKey,
+                        Self.__associated_dicKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_dicKey: UInt8 = 0
+            static var __associated_dicKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_3dicfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -664,14 +740,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_dicKey
+                        Self.__associated_dicKey
                     ) as? [Swift.Int: Swift.Int] {
                         return value
                     } else {
                         let value: [Swift.Int: Swift.Int] = [1: 3, 2: 4]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_dicKey,
+                            Self.__associated_dicKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -681,14 +757,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_dicKey,
+                        Self.__associated_dicKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_dicKey: UInt8 = 0
+            static var __associated_dicKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_3dicfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -705,14 +786,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_dicKey
+                        Self.__associated_dicKey
                     ) as? [Swift.Double: Swift.Double] {
                         return value
                     } else {
                         let value: [Swift.Double: Swift.Double] = [1.0: 3.0, 2.0: 4.0]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_dicKey,
+                            Self.__associated_dicKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -722,14 +803,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_dicKey,
+                        Self.__associated_dicKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_dicKey: UInt8 = 0
+            static var __associated_dicKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_3dicfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
@@ -750,14 +836,14 @@ extension AssociatedTypeDetectionObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        &Self.__associated_arrayKey
+                        Self.__associated_arrayKey
                     ) as? [[Swift.Double]] {
                         return value
                     } else {
                         let value: [[Swift.Double]] = [[1.0], [2.0], [3.0, 4.0]]
                         objc_setAssociatedObject(
                             self,
-                            &Self.__associated_arrayKey,
+                            Self.__associated_arrayKey,
                             value,
                             .OBJC_ASSOCIATION_ASSIGN
                         )
@@ -767,14 +853,19 @@ extension AssociatedTypeDetectionObjectTests {
                 set {
                     objc_setAssociatedObject(
                         self,
-                        &Self.__associated_arrayKey,
+                        Self.__associated_arrayKey,
                         newValue,
                         .OBJC_ASSOCIATION_ASSIGN
                     )
                 }
             }
 
-            static var __associated_arrayKey: UInt8 = 0
+            static var __associated_arrayKey: UnsafeRawPointer {
+                unsafeBitCast(
+                    NSSelectorFromString("__macro_local_5arrayfMu_"),
+                    to: UnsafeRawPointer.self
+                )
+            }
             """
         }
     }
