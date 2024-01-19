@@ -35,13 +35,24 @@ extension AssociatedObjectMacro: PeerMacro {
             return []
         }
 
+
+        let uniqueSelectorName = context.makeUniqueName(identifier.text).text
+        let keyAccessor = """
+        unsafeBitCast(
+            NSSelectorFromString(\"\(uniqueSelectorName)\"),
+            to: UnsafeRawPointer.self
+        )
+        """
+
         let keyDecl = VariableDeclSyntax(
             bindingSpecifier: .identifier("static var"),
             bindings: PatternBindingListSyntax {
                 PatternBindingSyntax(
                     pattern: IdentifierPatternSyntax(identifier: .identifier("__associated_\(identifier.trimmed)Key")),
-                    typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UInt8"))),
-                    initializer: InitializerClauseSyntax(value: ExprSyntax(stringLiteral: "0"))
+                    typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UnsafeRawPointer"))),
+                    accessorBlock: .init(
+                        accessors: .getter("\(raw: keyAccessor)")
+                    )
                 )
             }
         )
@@ -51,6 +62,7 @@ extension AssociatedObjectMacro: PeerMacro {
         ]
 
         if type.isOptional && defaultValue != nil {
+            let flagName = "__associated_\(identifier.trimmed)IsSet"
             let flagDecl = VariableDeclSyntax(
                 attributes: [
                     .attribute("@_AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)")
@@ -59,13 +71,21 @@ extension AssociatedObjectMacro: PeerMacro {
                 bindings: PatternBindingListSyntax {
                     PatternBindingSyntax(
                         pattern: IdentifierPatternSyntax(
-                            identifier: .identifier("__associated_\(identifier.trimmed)IsSet")
+                            identifier: .identifier(flagName)
                         ),
                         typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("Bool"))),
                         initializer: InitializerClauseSyntax(value: BooleanLiteralExprSyntax(false))
                     )
                 }
             )
+
+            let uniqueSelectorName = context.makeUniqueName(flagName).text
+            let keyAccessor = """
+            unsafeBitCast(
+                NSSelectorFromString(\"\(uniqueSelectorName)\"),
+                to: UnsafeRawPointer.self
+            )
+            """
             let flagKeyDecl = VariableDeclSyntax(
                 bindingSpecifier: .identifier("static var"),
                 bindings: PatternBindingListSyntax {
@@ -73,8 +93,10 @@ extension AssociatedObjectMacro: PeerMacro {
                         pattern: IdentifierPatternSyntax(
                             identifier: .identifier("__associated___associated_\(identifier.trimmed)IsSetKey")
                         ),
-                        typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UInt8"))),
-                        initializer: InitializerClauseSyntax(value: ExprSyntax(stringLiteral: "0"))
+                        typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UnsafeRawPointer"))),
+                        accessorBlock: .init(
+                            accessors: .getter("\(raw: keyAccessor)")
+                        )
                     )
                 }
             )
@@ -194,7 +216,7 @@ extension AssociatedObjectMacro {
                             let value: \(type.trimmed) = \(defaultValue.trimmed)
                             objc_setAssociatedObject(
                                 self,
-                                &Self.__associated_\(identifier.trimmed)Key,
+                                Self.__associated_\(identifier.trimmed)Key,
                                 value,
                                 \(policy.trimmed)
                             )
@@ -203,7 +225,7 @@ extension AssociatedObjectMacro {
                         } else {
                             return objc_getAssociatedObject(
                                 self,
-                                &Self.__associated_\(identifier.trimmed)Key
+                                Self.__associated_\(identifier.trimmed)Key
                             ) as! \(varTypeWithoutOptional.trimmed)
                         }
                         """
@@ -211,14 +233,14 @@ extension AssociatedObjectMacro {
                         """
                         if let value = objc_getAssociatedObject(
                             self,
-                            &Self.__associated_\(identifier.trimmed)Key
+                            Self.__associated_\(identifier.trimmed)Key
                         ) as? \(varTypeWithoutOptional.trimmed) {
                             return value
                         } else {
                             let value: \(type.trimmed) = \(defaultValue.trimmed)
                             objc_setAssociatedObject(
                                 self,
-                                &Self.__associated_\(identifier.trimmed)Key,
+                                Self.__associated_\(identifier.trimmed)Key,
                                 value,
                                 \(policy.trimmed)
                             )
@@ -230,7 +252,7 @@ extension AssociatedObjectMacro {
                     """
                     objc_getAssociatedObject(
                         self,
-                        &Self.__associated_\(identifier.trimmed)Key
+                        Self.__associated_\(identifier.trimmed)Key
                     ) as? \(varTypeWithoutOptional.trimmed)
                     ?? \(defaultValue ?? "nil")
                     """
@@ -278,7 +300,7 @@ extension AssociatedObjectMacro {
                 """
                 objc_setAssociatedObject(
                     self,
-                    &Self.__associated_\(identifier.trimmed)Key,
+                    Self.__associated_\(identifier.trimmed)Key,
                     newValue,
                     \(policy)
                 )
