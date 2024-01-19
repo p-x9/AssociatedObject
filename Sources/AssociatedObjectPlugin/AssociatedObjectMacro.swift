@@ -26,6 +26,15 @@ extension AssociatedObjectMacro: PeerMacro {
             return []
         }
 
+        let defaultValue = binding.initializer?.value
+        let type: TypeSyntax? = binding.typeAnnotation?.type ?? defaultValue?.detectedTypeByLiteral
+
+        guard let type else {
+            //  Explicit specification of type is required
+            context.diagnose(AssociatedObjectMacroDiagnostic.specifyTypeExplicitly.diagnose(at: identifier))
+            return []
+        }
+
         let keyDecl = VariableDeclSyntax(
             bindingSpecifier: .identifier("static var"),
             bindings: PatternBindingListSyntax {
@@ -37,9 +46,43 @@ extension AssociatedObjectMacro: PeerMacro {
             }
         )
 
-        return [
+        var decls = [
             DeclSyntax(keyDecl)
         ]
+
+        if type.isOptional && defaultValue != nil {
+            let flagDecl = VariableDeclSyntax(
+                attributes: [
+                    .attribute("@_AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)")
+                ],
+                bindingSpecifier: .identifier("var"),
+                bindings: PatternBindingListSyntax {
+                    PatternBindingSyntax(
+                        pattern: IdentifierPatternSyntax(
+                            identifier: .identifier("__associated_\(identifier.trimmed)IsSet")
+                        ),
+                        typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("Bool"))),
+                        initializer: InitializerClauseSyntax(value: BooleanLiteralExprSyntax(false))
+                    )
+                }
+            )
+            let flagKeyDecl = VariableDeclSyntax(
+                bindingSpecifier: .identifier("static var"),
+                bindings: PatternBindingListSyntax {
+                    PatternBindingSyntax(
+                        pattern: IdentifierPatternSyntax(
+                            identifier: .identifier("__associated___associated_\(identifier.trimmed)IsSetKey")
+                        ),
+                        typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UInt8"))),
+                        initializer: InitializerClauseSyntax(value: ExprSyntax(stringLiteral: "0"))
+                    )
+                }
+            )
+            decls.append(DeclSyntax(flagDecl))
+            decls.append(DeclSyntax(flagKeyDecl))
+        }
+
+        return decls
     }
 }
 
@@ -142,35 +185,56 @@ extension AssociatedObjectMacro {
         } else {
             type
         }
+
         return AccessorDeclSyntax(
             accessorSpecifier: .keyword(.get),
             body: CodeBlockSyntax {
                 if let defaultValue {
-                    """
-                    if let value = objc_getAssociatedObject(
-                        self,
-                        &Self.__associated_\(identifier.trimmed)Key
-                    ) as? \(varTypeWithoutOptional.trimmed) {
-                        return value
-                    }
-                        let value: \(type.trimmed) = \(defaultValue.trimmed)
-                        objc_setAssociatedObject(
+                    if type.isOptional {
+                        """
+                        if !self.__associated_\(identifier.trimmed)IsSet {
+                            let value: \(type.trimmed) = \(defaultValue.trimmed)
+                            objc_setAssociatedObject(
+                                self,
+                                &Self.__associated_\(identifier.trimmed)Key,
+                                value,
+                                \(policy.trimmed)
+                            )
+                            self.__associated_\(identifier.trimmed)IsSet = true
+                            return value
+                        } else {
+                            return objc_getAssociatedObject(
+                                self,
+                                &Self.__associated_\(identifier.trimmed)Key
+                            ) as! \(varTypeWithoutOptional.trimmed)
+                        }
+                        """
+                    } else {
+                        """
+                        if let value = objc_getAssociatedObject(
                             self,
-                            &Self.__associated_\(identifier.trimmed)Key,
-                            value,
-                            \(policy.trimmed)
-                        )
-                        return value
-                    """
+                            &Self.__associated_\(identifier.trimmed)Key
+                        ) as? \(varTypeWithoutOptional.trimmed) {
+                            return value
+                        } else {
+                            let value: \(type.trimmed) = \(defaultValue.trimmed)
+                            objc_setAssociatedObject(
+                                self,
+                                &Self.__associated_\(identifier.trimmed)Key,
+                                value,
+                                \(policy.trimmed)
+                            )
+                            return value
+                        }
+                        """
+                    }
                 } else {
                     """
-                    if let value = objc_getAssociatedObject(
+                    objc_getAssociatedObject(
                         self,
                         &Self.__associated_\(identifier.trimmed)Key
-                    ) as? \(varTypeWithoutOptional.trimmed) {
-                        return value
-                    }
-                        return nil
+                    ) as? \(varTypeWithoutOptional.trimmed)
+                    ?? \(defaultValue ?? "nil")
                     """
                 }
             }
