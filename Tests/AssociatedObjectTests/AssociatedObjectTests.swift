@@ -294,7 +294,7 @@ final class AssociatedObjectTests: XCTestCase {
                     objc_getAssociatedObject(
                         self,
                         &Self.__associated_stringKey
-                    ) as? String?
+                    ) as? String
                     ?? nil
                 }
                 set {
@@ -924,6 +924,9 @@ extension AssociatedObjectTests {
 
         item.optionalDouble = nil
         XCTAssertEqual(item.optionalDouble, nil)
+
+        item.implicitlyUnwrappedString = "hello"
+        XCTAssertEqual(item.implicitlyUnwrappedString, "hello")
     }
 
     func testSetDefaultValue() {
