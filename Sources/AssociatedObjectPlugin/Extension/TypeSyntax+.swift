@@ -11,7 +11,7 @@ import SwiftSyntaxBuilder
 
 extension TypeSyntax {
     var isOptional: Bool {
-        if self.as(OptionalTypeSyntax.self) != nil {
+        if self.is(OptionalTypeSyntax.self) || self.is(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
             return true
         }
         if let simpleType = self.as(IdentifierTypeSyntax.self),

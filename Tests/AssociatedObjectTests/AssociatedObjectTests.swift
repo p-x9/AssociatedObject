@@ -281,6 +281,37 @@ final class AssociatedObjectTests: XCTestCase {
         }
     }
 
+    func testImplicitlyUnwrappedOptionalString() throws {
+        assertMacro {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            var string: String!
+            """
+        } expansion: {
+            """
+            var string: String! {
+                get {
+                    objc_getAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey
+                    ) as? String
+                    ?? nil
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &Self.__associated_stringKey,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
+
+            static var __associated_stringKey: UInt8 = 0
+            """
+        }
+    }
+
     func testOptionalStringWithInitialValue() throws {
         assertMacro {
             """
@@ -893,6 +924,9 @@ extension AssociatedObjectTests {
 
         item.optionalDouble = nil
         XCTAssertEqual(item.optionalDouble, nil)
+
+        item.implicitlyUnwrappedString = "hello"
+        XCTAssertEqual(item.implicitlyUnwrappedString, "hello")
     }
 
     func testSetDefaultValue() {

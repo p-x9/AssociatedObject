@@ -33,6 +33,9 @@ class ClassType {
     @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
     var optionalBool: Bool? = false
 
+    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    var implicitlyUnwrappedString: String!
+
     @AssociatedObject(.OBJC_ASSOCIATION_RETAIN)
     var intArray = [0]
 
