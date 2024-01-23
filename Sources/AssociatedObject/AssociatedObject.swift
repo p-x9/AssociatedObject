@@ -1,5 +1,4 @@
 @_exported import ObjectiveC
-@_exported import func Foundation.NSSelectorFromString
 
 @attached(peer, names: arbitrary)
 @attached(accessor)
