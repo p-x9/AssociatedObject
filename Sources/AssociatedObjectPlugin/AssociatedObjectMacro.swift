@@ -35,13 +35,9 @@ extension AssociatedObjectMacro: PeerMacro {
             return []
         }
 
-
-        let uniqueSelectorName = context.makeUniqueName(identifier.text).text
         let keyAccessor = """
-        unsafeBitCast(
-            NSSelectorFromString(\"\(uniqueSelectorName)\"),
-            to: UnsafeRawPointer.self
-        )
+        let f: @convention(c) () -> Void = {}
+        return unsafeBitCast(f, to: UnsafeRawPointer.self)
         """
 
         let keyDecl = VariableDeclSyntax(
@@ -79,12 +75,9 @@ extension AssociatedObjectMacro: PeerMacro {
                 }
             )
 
-            let uniqueSelectorName = context.makeUniqueName(flagName).text
             let keyAccessor = """
-            unsafeBitCast(
-                NSSelectorFromString(\"\(uniqueSelectorName)\"),
-                to: UnsafeRawPointer.self
-            )
+            let f: @convention(c) () -> Void = {}
+            return unsafeBitCast(f, to: UnsafeRawPointer.self)
             """
             let flagKeyDecl = VariableDeclSyntax(
                 bindingSpecifier: .identifier("static var"),
