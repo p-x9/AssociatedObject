@@ -52,10 +52,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -98,10 +97,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_intKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_3intfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -144,10 +142,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_floatKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_5floatfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -190,10 +187,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_doubleKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6doublefMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -236,10 +232,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -272,10 +267,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -308,10 +302,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -344,10 +337,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -391,19 +383,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
 
             @_AssociatedObject(.OBJC_ASSOCIATION_ASSIGN) var __associated_stringIsSet: Bool = false
 
             static var __associated___associated_stringIsSetKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_24__associated_stringIsSetfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -446,10 +436,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_boolKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_4boolfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -492,10 +481,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_intArrayKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_8intArrayfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -528,10 +516,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_boolKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_4boolfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -574,10 +561,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_dicKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_3dicfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -636,10 +622,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -696,10 +681,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -770,10 +754,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -832,10 +815,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -892,10 +874,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -938,10 +919,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             static var __associated_stringKey: UnsafeRawPointer {
-                unsafeBitCast(
-                    NSSelectorFromString("__macro_local_6stringfMu_"),
-                    to: UnsafeRawPointer.self
-                )
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
