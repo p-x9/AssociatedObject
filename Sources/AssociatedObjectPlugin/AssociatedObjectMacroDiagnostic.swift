@@ -15,6 +15,7 @@ public enum AssociatedObjectMacroDiagnostic {
     case getterAndSetterShouldBeNil
     case requiresInitialValue
     case specifyTypeExplicitly
+    case invalidCustomKeySpecification
 }
 
 extension AssociatedObjectMacroDiagnostic: DiagnosticMessage {
@@ -36,6 +37,8 @@ extension AssociatedObjectMacroDiagnostic: DiagnosticMessage {
             return "Initial values must be specified when using `@AssociatedObject`."
         case .specifyTypeExplicitly:
             return "Specify a type explicitly when using `@AssociatedObject`."
+        case .invalidCustomKeySpecification:
+            return "customKey specification is invalid."
         }
     }
 

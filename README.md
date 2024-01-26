@@ -48,6 +48,10 @@ extension UIViewController {
 
     @AssociatedObject(.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     var text = "text"
+
+    static var customKey = ""
+    @AssociatedObject(.OBJC_ASSOCIATION_RETAIN_NONATOMIC, key: customKey)
+    var somevar = "text"
 }
 ```
 
