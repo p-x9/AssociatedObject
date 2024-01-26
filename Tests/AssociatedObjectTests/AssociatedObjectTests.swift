@@ -6,6 +6,7 @@ import MacroTesting
 @testable import AssociatedObject
 
 final class AssociatedObjectTests: XCTestCase {
+
     override func invokeTest() {
         withMacroTesting(
 //            isRecording: true,
@@ -953,6 +954,63 @@ final class AssociatedObjectTests: XCTestCase {
                 ┬─────
                 ├─ 🛑 Specify a type explicitly when using `@AssociatedObject`.
                 ╰─ 🛑 Specify a type explicitly when using `@AssociatedObject`.
+            """
+        }
+    }
+
+    func testDiagnosticsInvalidCustomKey() throws {
+        assertMacro {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN, key: "key")
+            var string = "string"
+            """
+        } diagnostics: {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN, key: "key")
+                                                        ┬─────────
+                                                        ╰─ 🛑 customKey specification is invalid.
+            var string = "string"
+            """
+        }
+    }
+}
+
+extension AssociatedObjectTests {
+    func testCustomStoreKey() throws {
+        assertMacro {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN, key: key)
+            var string: String = "text"
+            """
+         } expansion: {
+            """
+            var string: String = "text" {
+                get {
+                    if let value = objc_getAssociatedObject(
+                        self,
+                        Self.__associated_stringKey
+                    ) as? String {
+                        return value
+                    } else {
+                        let value: String = "text"
+                        objc_setAssociatedObject(
+                            self,
+                            &key,
+                            value,
+                            .OBJC_ASSOCIATION_ASSIGN
+                        )
+                        return value
+                    }
+                }
+                set {
+                    objc_setAssociatedObject(
+                        self,
+                        &key,
+                        newValue,
+                        .OBJC_ASSOCIATION_ASSIGN
+                    )
+                }
+            }
             """
         }
     }

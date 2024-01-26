@@ -26,6 +26,20 @@ extension AssociatedObjectMacro: PeerMacro {
             return []
         }
 
+        if case let .argumentList(arguments) = node.arguments,
+           let element = arguments.first(where: { $0.label?.text == "key" }) {
+            let kind = element.expression.kind
+            if ![.declReferenceExpr, .memberAccessExpr].contains(kind) {
+                context.diagnose(
+                    AssociatedObjectMacroDiagnostic
+                        .invalidCustomKeySpecification
+                        .diagnose(at: element)
+                )
+            }
+            // Provide store key from outside the macro
+            return []
+        }
+
         let defaultValue = binding.initializer?.value
         let type: TypeSyntax? = binding.typeAnnotation?.type ?? defaultValue?.detectedTypeByLiteral
 
@@ -167,10 +181,19 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
+        var associatedKey: ExprSyntax = "Self.__associated_\(identifier.trimmed)Key"
+        if case let .argumentList(arguments) = node.arguments,
+           let element = arguments.first(where: { $0.label?.text == "key" }),
+           let customKey = element.expression.as(ExprSyntax.self) {
+            // Provide store key from outside the macro
+            associatedKey = "&\(customKey)"
+        }
+
         return [
             Self.getter(
                 identifier: identifier,
                 type: type,
+                associatedKey: associatedKey,
                 policy: policy,
                 defaultValue: defaultValue
             ),
@@ -179,6 +202,7 @@ extension AssociatedObjectMacro: AccessorMacro {
                 identifier: identifier,
                 type: type,
                 policy: policy,
+                associatedKey: associatedKey,
                 willSet: binding.willSet,
                 didSet: binding.didSet
             )
@@ -196,6 +220,7 @@ extension AssociatedObjectMacro {
     static func getter(
         identifier: TokenSyntax,
         type: TypeSyntax,
+        associatedKey: ExprSyntax,
         policy: ExprSyntax,
         defaultValue: ExprSyntax?
     ) -> AccessorDeclSyntax {
@@ -215,7 +240,7 @@ extension AssociatedObjectMacro {
                             let value: \(type.trimmed) = \(defaultValue.trimmed)
                             objc_setAssociatedObject(
                                 self,
-                                Self.__associated_\(identifier.trimmed)Key,
+                                \(associatedKey),
                                 value,
                                 \(policy.trimmed)
                             )
@@ -224,7 +249,7 @@ extension AssociatedObjectMacro {
                         } else {
                             return objc_getAssociatedObject(
                                 self,
-                                Self.__associated_\(identifier.trimmed)Key
+                                \(associatedKey)
                             ) as! \(varTypeWithoutOptional.trimmed)
                         }
                         """
@@ -239,7 +264,7 @@ extension AssociatedObjectMacro {
                             let value: \(type.trimmed) = \(defaultValue.trimmed)
                             objc_setAssociatedObject(
                                 self,
-                                Self.__associated_\(identifier.trimmed)Key,
+                                \(associatedKey),
                                 value,
                                 \(policy.trimmed)
                             )
@@ -251,7 +276,7 @@ extension AssociatedObjectMacro {
                     """
                     objc_getAssociatedObject(
                         self,
-                        Self.__associated_\(identifier.trimmed)Key
+                        \(associatedKey)
                     ) as? \(varTypeWithoutOptional.trimmed)
                     ?? \(defaultValue ?? "nil")
                     """
@@ -274,6 +299,7 @@ extension AssociatedObjectMacro {
         identifier: TokenSyntax,
         type: TypeSyntax,
         policy: ExprSyntax,
+        associatedKey: ExprSyntax,
         `willSet`: AccessorDeclSyntax?,
         `didSet`: AccessorDeclSyntax?
     ) -> AccessorDeclSyntax {
@@ -299,7 +325,7 @@ extension AssociatedObjectMacro {
                 """
                 objc_setAssociatedObject(
                     self,
-                    Self.__associated_\(identifier.trimmed)Key,
+                    \(associatedKey),
                     newValue,
                     \(policy)
                 )
