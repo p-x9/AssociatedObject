@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "swift-literal-type-inference",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/p-x9/swift-literal-type-inference.git",
+      "state" : {
+        "revision" : "d4c97a7e48d3fab0c4575641c9a257602c1d17b7",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "swift-macro-testing",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-macro-testing.git",
