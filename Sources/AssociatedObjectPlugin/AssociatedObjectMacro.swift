@@ -36,11 +36,13 @@ extension AssociatedObjectMacro: PeerMacro {
         }
 
         let keyAccessor = """
-        let f: @convention(c) () -> Void = {}
-        return unsafeBitCast(f, to: UnsafeRawPointer.self)
+        _associated_object_key()
         """
 
         let keyDecl = VariableDeclSyntax(
+            attributes: [
+                .attribute("@inline(never)")
+            ],
             bindingSpecifier: .identifier("static var"),
             bindings: PatternBindingListSyntax {
                 PatternBindingSyntax(
@@ -75,11 +77,15 @@ extension AssociatedObjectMacro: PeerMacro {
                 }
             )
 
+            // nested peer macro will not expand
+            // https://github.com/apple/swift/issues/69073
             let keyAccessor = """
-            let f: @convention(c) () -> Void = {}
-            return unsafeBitCast(f, to: UnsafeRawPointer.self)
+            _associated_object_key()
             """
             let flagKeyDecl = VariableDeclSyntax(
+                attributes: [
+                    .attribute("@inline(never)")
+                ],
                 bindingSpecifier: .identifier("static var"),
                 bindings: PatternBindingListSyntax {
                     PatternBindingSyntax(

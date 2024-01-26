@@ -30,8 +30,12 @@ let package = Package(
         .target(
             name: "AssociatedObject",
             dependencies: [
+                "AssociatedObjectC",
                 "AssociatedObjectPlugin"
             ]
+        ),
+        .target(
+            name: "AssociatedObjectC"
         ),
         .macro(
             name: "AssociatedObjectPlugin",

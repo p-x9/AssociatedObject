@@ -1,4 +1,5 @@
 @_exported import ObjectiveC
+@_exported import AssociatedObjectC
 
 @attached(peer, names: arbitrary)
 @attached(accessor)
