@@ -27,8 +27,15 @@ extension AssociatedObjectMacro: PeerMacro {
         }
 
         if case let .argumentList(arguments) = node.arguments,
-           let element = arguments.first(where: { $0.label?.text == "key" }),
-           element.expression.is(DeclReferenceExprSyntax.self) {
+           let element = arguments.first(where: { $0.label?.text == "key" }) {
+            let kind = element.expression.kind
+            if ![.declReferenceExpr, .memberAccessExpr].contains(kind) {
+                context.diagnose(
+                    AssociatedObjectMacroDiagnostic
+                        .invalidCustomKeySpecification
+                        .diagnose(at: element)
+                )
+            }
             // Provide store key from outside the macro
             return []
         }
@@ -156,7 +163,7 @@ extension AssociatedObjectMacro: AccessorMacro {
         var associatedKey: ExprSyntax = "&Self.__associated_\(identifier.trimmed)Key"
         if case let .argumentList(arguments) = node.arguments,
            let element = arguments.first(where: { $0.label?.text == "key" }),
-           let customKey = element.expression.as(DeclReferenceExprSyntax.self) {
+           let customKey = element.expression.as(ExprSyntax.self) {
             // Provide store key from outside the macro
             associatedKey = "&\(customKey)"
         }

@@ -916,6 +916,22 @@ final class AssociatedObjectTests: XCTestCase {
             """
         }
     }
+
+    func testDiagnosticsInvalidCustomKey() throws {
+        assertMacro {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN, key: "key")
+            var string = "string"
+            """
+        } diagnostics: {
+            """
+            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN, key: "key")
+                                                        ┬─────────
+                                                        ╰─ 🛑 customKey specification is invalid.
+            var string = "string"
+            """
+        }
+    }
 }
 
 extension AssociatedObjectTests {
