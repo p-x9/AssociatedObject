@@ -988,7 +988,7 @@ extension AssociatedObjectTests {
                 get {
                     if let value = objc_getAssociatedObject(
                         self,
-                        Self.__associated_stringKey
+                        &key
                     ) as? String {
                         return value
                     } else {
