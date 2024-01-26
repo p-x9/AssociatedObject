@@ -1,5 +1,8 @@
 @_exported import ObjectiveC
+
+#if canImport(AssociatedObjectC)
 @_exported import AssociatedObjectC
+#endif
 
 @attached(peer, names: arbitrary)
 @attached(accessor)

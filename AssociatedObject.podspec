@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 
   s.prepare_command = 'swift build -c release && cp -f .build/release/AssociatedObjectPlugin ./Binary'
 
-  s.source_files  = "Sources/AssociatedObject/AssociatedObject.swift"
+  s.source_files  = "Sources/AssociatedObject/AssociatedObject.swift", 'Sources/AssociatedObjectC/**/*.{c,h,m,swift}'
   s.swift_versions = "5.9"
 
   s.preserve_paths = ["Binary/AssociatedObjectPlugin"]
