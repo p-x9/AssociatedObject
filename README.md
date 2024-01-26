@@ -13,13 +13,13 @@ It is implemented by wrapping `objc_getAssociatedObject`/`objc_setAssociatedObje
 
 #### SPM
 ```swift
-.package(url: "https://github.com/p-x9/AssociatedObject", from: "0.7.0")
+.package(url: "https://github.com/p-x9/AssociatedObject", from: "0.8.0")
 ```
 
 #### CocoaPods
 Add below to your `Podfile`.
 ```
-pod 'AssociatedObject', git: 'https://github.com/p-x9/AssociatedObject', '~> 0.7.0'
+pod 'AssociatedObject', git: 'https://github.com/p-x9/AssociatedObject', tag: '0.8.0'
 ```
 
 After `pod install`, you can use this Macro in your project.
