@@ -9,6 +9,7 @@
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
+import LiteralTypeInference
 
 public struct AssociatedObjectMacro {}
 
@@ -41,7 +42,7 @@ extension AssociatedObjectMacro: PeerMacro {
         }
 
         let defaultValue = binding.initializer?.value
-        let type: TypeSyntax? = binding.typeAnnotation?.type ?? defaultValue?.detectedTypeByLiteral
+        let type: TypeSyntax? = binding.typeAnnotation?.type ?? defaultValue?.inferredType
 
         guard let type else {
             //  Explicit specification of type is required
@@ -148,9 +149,9 @@ extension AssociatedObjectMacro: AccessorMacro {
         if let specifiedType = binding.typeAnnotation?.type {
             //  TypeAnnotation
             type = specifiedType
-        } else if let detectedType = defaultValue?.detectedTypeByLiteral {
-            //  TypeDetection
-            type = detectedType
+        } else if let inferredType = defaultValue?.inferredType {
+            //  infer type of defaultValue
+            type = inferredType
         } else {
             //  Explicit specification of type is required
             context.diagnose(AssociatedObjectMacroDiagnostic.specifyTypeExplicitly.diagnose(at: identifier))
