@@ -25,11 +25,20 @@ extension AssociatedObjectMacro: PeerMacro {
             context.diagnose(AssociatedObjectMacroDiagnostic.requiresVariableDeclaration.diagnose(at: declaration))
             return []
         }
-        
+
         if case let .argumentList(arguments) = node.arguments,
            let element = arguments.first(where: { $0.label?.text == "key" }),
            element.expression.is(DeclReferenceExprSyntax.self) {
             // Provide store key from outside the macro
+            return []
+        }
+
+        let defaultValue = binding.initializer?.value
+        let type: TypeSyntax? = binding.typeAnnotation?.type ?? defaultValue?.detectedTypeByLiteral
+
+        guard let type else {
+            //  Explicit specification of type is required
+            context.diagnose(AssociatedObjectMacroDiagnostic.specifyTypeExplicitly.diagnose(at: identifier))
             return []
         }
 
@@ -44,9 +53,43 @@ extension AssociatedObjectMacro: PeerMacro {
             }
         )
 
-        return [
+        var decls = [
             DeclSyntax(keyDecl)
         ]
+
+        if type.isOptional && defaultValue != nil {
+            let flagDecl = VariableDeclSyntax(
+                attributes: [
+                    .attribute("@_AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)")
+                ],
+                bindingSpecifier: .identifier("var"),
+                bindings: PatternBindingListSyntax {
+                    PatternBindingSyntax(
+                        pattern: IdentifierPatternSyntax(
+                            identifier: .identifier("__associated_\(identifier.trimmed)IsSet")
+                        ),
+                        typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("Bool"))),
+                        initializer: InitializerClauseSyntax(value: BooleanLiteralExprSyntax(false))
+                    )
+                }
+            )
+            let flagKeyDecl = VariableDeclSyntax(
+                bindingSpecifier: .identifier("static var"),
+                bindings: PatternBindingListSyntax {
+                    PatternBindingSyntax(
+                        pattern: IdentifierPatternSyntax(
+                            identifier: .identifier("__associated___associated_\(identifier.trimmed)IsSetKey")
+                        ),
+                        typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UInt8"))),
+                        initializer: InitializerClauseSyntax(value: ExprSyntax(stringLiteral: "0"))
+                    )
+                }
+            )
+            decls.append(DeclSyntax(flagDecl))
+            decls.append(DeclSyntax(flagKeyDecl))
+        }
+
+        return decls
     }
 }
 
@@ -109,7 +152,7 @@ extension AssociatedObjectMacro: AccessorMacro {
               let policy = firstElement.as(ExprSyntax.self) else {
             return []
         }
-        
+
         var associatedKey = "&Self.__associated_\(identifier.trimmed)Key"
         if case let .argumentList(arguments) = node.arguments,
            let element = arguments.first(where: { $0.label?.text == "key" }),
@@ -153,35 +196,61 @@ extension AssociatedObjectMacro {
         policy: ExprSyntax,
         defaultValue: ExprSyntax?
     ) -> AccessorDeclSyntax {
-        AccessorDeclSyntax(
+        let varTypeWithoutOptional = if let type = type.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
+            type.wrappedType
+        } else {
+            type
+        }
+
+        return AccessorDeclSyntax(
             accessorSpecifier: .keyword(.get),
             body: CodeBlockSyntax {
                 if let defaultValue {
-                    """
-                    if let value = objc_getAssociatedObject(
-                        self,
-                        \(raw: associatedKey)
-                    ) as? \(type.trimmed) {
-                        return value
-                    }
-                        let value: \(type.trimmed) = \(defaultValue.trimmed)
-                        objc_setAssociatedObject(
+                    if type.isOptional {
+                        """
+                        if !self.__associated_\(identifier.trimmed)IsSet {
+                            let value: \(type.trimmed) = \(defaultValue.trimmed)
+                            objc_setAssociatedObject(
+                                self,
+                                \(raw: associatedKey),
+                                value,
+                                \(policy.trimmed)
+                            )
+                            self.__associated_\(identifier.trimmed)IsSet = true
+                            return value
+                        } else {
+                            return objc_getAssociatedObject(
+                                self,
+                                \(raw: associatedKey)
+                            ) as! \(varTypeWithoutOptional.trimmed)
+                        }
+                        """
+                    } else {
+                        """
+                        if let value = objc_getAssociatedObject(
                             self,
-                            \(raw: associatedKey),
-                            value,
-                            \(policy.trimmed)
-                        )
-                        return value
-                    """
+                            &Self.__associated_\(identifier.trimmed)Key
+                        ) as? \(varTypeWithoutOptional.trimmed) {
+                            return value
+                        } else {
+                            let value: \(type.trimmed) = \(defaultValue.trimmed)
+                            objc_setAssociatedObject(
+                                self,
+                                \(raw: associatedKey),
+                                value,
+                                \(policy.trimmed)
+                            )
+                            return value
+                        }
+                        """
+                    }
                 } else {
                     """
-                    if let value = objc_getAssociatedObject(
+                    objc_getAssociatedObject(
                         self,
                         \(raw: associatedKey)
-                    ) as? \(type.trimmed) {
-                        return value
-                    }
-                        return nil
+                    ) as? \(varTypeWithoutOptional.trimmed)
+                    ?? \(defaultValue ?? "nil")
                     """
                 }
             }

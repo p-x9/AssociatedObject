@@ -9,6 +9,32 @@ It is implemented by wrapping `objc_getAssociatedObject`/`objc_setAssociatedObje
 [![Github stars](https://img.shields.io/github/stars/p-x9/AssociatedObject)](https://github.com/p-x9/AssociatedObject/stargazers)
 [![Github top language](https://img.shields.io/github/languages/top/p-x9/AssociatedObject)](https://github.com/p-x9/AssociatedObject/)
 
+## Installation
+
+#### SPM
+```swift
+.package(url: "https://github.com/p-x9/AssociatedObject", from: "0.7.0")
+```
+
+#### CocoaPods
+Add below to your `Podfile`.
+```
+pod 'AssociatedObject', git: 'https://github.com/p-x9/AssociatedObject', '~> 0.7.0'
+```
+
+After `pod install`, you can use this Macro in your project.
+
+Additionally, if you encounter build error like `Expansion of macro 'AssociatedObject' did not produce a non-observing accessor`. You should check your project setting `Build Settings`-`OTHER_SWIFT_FLAGS`.
+
+There should be additional flags like so.
+![Alt text](image.png)
+
+If not, you can add these two lines by yourself.
+```
+-load-plugin-executable
+${PODS_ROOT}/AssociatedObject/Binary/AssociatedObjectPlugin#AssociatedObjectPlugin
+```
+
 ## Usage
 For example, you can add a new stored property to `UIViewController` by declaring the following
 ```swift
