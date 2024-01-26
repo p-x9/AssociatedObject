@@ -257,7 +257,7 @@ extension AssociatedObjectMacro {
                         """
                         if let value = objc_getAssociatedObject(
                             self,
-                            Self.__associated_\(identifier.trimmed)Key
+                            \(associatedKey)
                         ) as? \(varTypeWithoutOptional.trimmed) {
                             return value
                         } else {
