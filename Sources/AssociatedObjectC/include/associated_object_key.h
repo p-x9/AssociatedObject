@@ -22,6 +22,18 @@
 #define get_return_address() ((void*) 0)
 #endif
 
-const void *_associated_object_key();
+#ifdef __GNUC__
+#define NOINLINE __attribute__((noinline))
+#elif _MSC_VER
+#define NOINLINE __declspec(noinline)
+#else
+#error missing implementation for `NOINLINE`
+#define NOINLINE
+#endif
+
+NOINLINE
+const void *_associated_object_key() {
+    return get_return_address();
+}
 
 #endif /* associated_object_key_h */
