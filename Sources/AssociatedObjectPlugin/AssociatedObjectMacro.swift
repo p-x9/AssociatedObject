@@ -49,13 +49,22 @@ extension AssociatedObjectMacro: PeerMacro {
             return []
         }
 
+        let keyAccessor = """
+        _associated_object_key()
+        """
+
         let keyDecl = VariableDeclSyntax(
+            attributes: [
+                .attribute("@inline(never)")
+            ],
             bindingSpecifier: .identifier("static var"),
             bindings: PatternBindingListSyntax {
                 PatternBindingSyntax(
                     pattern: IdentifierPatternSyntax(identifier: .identifier("__associated_\(identifier.trimmed)Key")),
-                    typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UInt8"))),
-                    initializer: InitializerClauseSyntax(value: ExprSyntax(stringLiteral: "0"))
+                    typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UnsafeRawPointer"))),
+                    accessorBlock: .init(
+                        accessors: .getter("\(raw: keyAccessor)")
+                    )
                 )
             }
         )
@@ -65,6 +74,7 @@ extension AssociatedObjectMacro: PeerMacro {
         ]
 
         if type.isOptional && defaultValue != nil {
+            let flagName = "__associated_\(identifier.trimmed)IsSet"
             let flagDecl = VariableDeclSyntax(
                 attributes: [
                     .attribute("@_AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)")
@@ -73,22 +83,33 @@ extension AssociatedObjectMacro: PeerMacro {
                 bindings: PatternBindingListSyntax {
                     PatternBindingSyntax(
                         pattern: IdentifierPatternSyntax(
-                            identifier: .identifier("__associated_\(identifier.trimmed)IsSet")
+                            identifier: .identifier(flagName)
                         ),
                         typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("Bool"))),
                         initializer: InitializerClauseSyntax(value: BooleanLiteralExprSyntax(false))
                     )
                 }
             )
+
+            // nested peer macro will not expand
+            // https://github.com/apple/swift/issues/69073
+            let keyAccessor = """
+            _associated_object_key()
+            """
             let flagKeyDecl = VariableDeclSyntax(
+                attributes: [
+                    .attribute("@inline(never)")
+                ],
                 bindingSpecifier: .identifier("static var"),
                 bindings: PatternBindingListSyntax {
                     PatternBindingSyntax(
                         pattern: IdentifierPatternSyntax(
                             identifier: .identifier("__associated___associated_\(identifier.trimmed)IsSetKey")
                         ),
-                        typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UInt8"))),
-                        initializer: InitializerClauseSyntax(value: ExprSyntax(stringLiteral: "0"))
+                        typeAnnotation: .init(type: IdentifierTypeSyntax(name: .identifier("UnsafeRawPointer"))),
+                        accessorBlock: .init(
+                            accessors: .getter("\(raw: keyAccessor)")
+                        )
                     )
                 }
             )
@@ -160,7 +181,7 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        var associatedKey: ExprSyntax = "&Self.__associated_\(identifier.trimmed)Key"
+        var associatedKey: ExprSyntax = "Self.__associated_\(identifier.trimmed)Key"
         if case let .argumentList(arguments) = node.arguments,
            let element = arguments.first(where: { $0.label?.text == "key" }),
            let customKey = element.expression.as(ExprSyntax.self) {
@@ -236,7 +257,7 @@ extension AssociatedObjectMacro {
                         """
                         if let value = objc_getAssociatedObject(
                             self,
-                            &Self.__associated_\(identifier.trimmed)Key
+                            \(associatedKey)
                         ) as? \(varTypeWithoutOptional.trimmed) {
                             return value
                         } else {
