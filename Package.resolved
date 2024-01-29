@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/p-x9/swift-object-association.git",
       "state" : {
-        "revision" : "c54aa5b34957f9b116e811a132df2ec396941316",
-        "version" : "0.3.0"
+        "revision" : "1719b57842416536f68deb1df364c28577ed20f3",
+        "version" : "0.4.0"
       }
     },
     {
