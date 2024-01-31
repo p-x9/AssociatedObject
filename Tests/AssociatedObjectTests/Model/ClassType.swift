@@ -9,58 +9,58 @@
 import AssociatedObject
 
 class ClassType {
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var int = 0
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var double = 0.0
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var string = ""
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var bool = false
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var optionalInt: Int?
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var optionalDouble: Double? = 123.4
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var optionalString: String?
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var optionalBool: Bool? = false
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var implicitlyUnwrappedString: String!
 
-    @AssociatedObject(.OBJC_ASSOCIATION_RETAIN)
+    @AssociatedObject(.retain(.atomic))
     var intArray = [0]
 
-    @AssociatedObject(.OBJC_ASSOCIATION_RETAIN)
+    @AssociatedObject(.retain(.atomic))
     var doubleArray = [0.0, 1]
 
-    @AssociatedObject(.OBJC_ASSOCIATION_RETAIN)
+    @AssociatedObject(.retain(.atomic))
     var stringArray = [""]
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var boolArray = [nil, false]
 
-    @AssociatedObject(.OBJC_ASSOCIATION_RETAIN)
+    @AssociatedObject(.retain(.atomic))
     var optionalIntArray = [0, nil]
 
-    @AssociatedObject(.OBJC_ASSOCIATION_RETAIN)
+    @AssociatedObject(.retain(.atomic))
     var optionalDoubleArray = [0.0, nil, 1]
 
-    @AssociatedObject(.OBJC_ASSOCIATION_RETAIN)
+    @AssociatedObject(.retain(.atomic))
     var optionalStringArray = [nil, ""]
 
-    @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+    @AssociatedObject(.retain(.nonatomic))
     var optionalBoolArray = [false, nil]
 
-    @AssociatedObject(.OBJC_ASSOCIATION_RETAIN)
+    @AssociatedObject(.retain(.atomic))
     var classType: ClassType2 = {
         .init()
     }()
@@ -71,7 +71,7 @@ class ClassType2 {}
 protocol ProtocolType: AnyObject {}
 
 extension ProtocolType {
-    @AssociatedObject(.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    @AssociatedObject(.retain(.nonatomic))
     var definedInProtocol = "hello"
 }
 

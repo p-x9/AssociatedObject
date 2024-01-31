@@ -19,35 +19,35 @@ final class AssociatedObjectTests: XCTestCase {
     func testString() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.atomic))
             var string: String = "text"
             """
         } expansion: {
             """
             var string: String = "text" {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String {
                         return value
                     } else {
                         let value: String = "text"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_stringKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.atomic)
                         )
                         return value
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.atomic)
                     )
                 }
             }
@@ -62,35 +62,35 @@ final class AssociatedObjectTests: XCTestCase {
     func testInt() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var int: Int = 5
             """
         } expansion: {
             """
             var int: Int = 5 {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_intKey
                     ) as? Int {
                         return value
                     } else {
                         let value: Int = 5
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_intKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_intKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -105,35 +105,35 @@ final class AssociatedObjectTests: XCTestCase {
     func testFloat() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var float: Float = 5.0
             """
         } expansion: {
             """
             var float: Float = 5.0 {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_floatKey
                     ) as? Float {
                         return value
                     } else {
                         let value: Float = 5.0
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_floatKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_floatKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -148,35 +148,35 @@ final class AssociatedObjectTests: XCTestCase {
     func testDouble() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var double: Double = 5.0
             """
         } expansion: {
             """
             var double: Double = 5.0 {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_doubleKey
                     ) as? Double {
                         return value
                     } else {
                         let value: Double = 5.0
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_doubleKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_doubleKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -191,35 +191,35 @@ final class AssociatedObjectTests: XCTestCase {
     func testStringWithOtherPolicy() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_COPY)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String = "text"
             """
         } expansion: {
             """
             var string: String = "text" {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String {
                         return value
                     } else {
                         let value: String = "text"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_stringKey,
                             value,
-                            .OBJC_ASSOCIATION_COPY
+                            .retain(.nonatomic)
                         )
                         return value
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_COPY
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -234,25 +234,25 @@ final class AssociatedObjectTests: XCTestCase {
     func testOptionalString() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String?
             """
         } expansion: {
             """
             var string: String? {
                 get {
-                    objc_getAssociatedObject(
+                    getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String?
                     ?? nil
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -267,25 +267,25 @@ final class AssociatedObjectTests: XCTestCase {
     func testOptionalGenericsString() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: Optional<String>
             """
         } expansion: {
             """
             var string: Optional<String> {
                 get {
-                    objc_getAssociatedObject(
+                    getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? Optional<String>
                     ?? nil
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -300,25 +300,25 @@ final class AssociatedObjectTests: XCTestCase {
     func testImplicitlyUnwrappedOptionalString() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String!
             """
         } expansion: {
             """
             var string: String! {
                 get {
-                    objc_getAssociatedObject(
+                    getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String
                     ?? nil
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -333,7 +333,7 @@ final class AssociatedObjectTests: XCTestCase {
     func testOptionalStringWithInitialValue() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String? = "hello"
             """
         } expansion: {
@@ -342,27 +342,27 @@ final class AssociatedObjectTests: XCTestCase {
                 get {
                     if !self.__associated_stringIsSet {
                         let value: String? = "hello"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_stringKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         self.__associated_stringIsSet = true
                         return value
                     } else {
-                        return objc_getAssociatedObject(
+                        return getAssociatedObject(
                             self,
                             Self.__associated_stringKey
                         ) as! String?
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -371,7 +371,7 @@ final class AssociatedObjectTests: XCTestCase {
                 _associated_object_key()
             }
 
-            @_AssociatedObject(.OBJC_ASSOCIATION_ASSIGN) var __associated_stringIsSet: Bool = false
+            @_AssociatedObject(.retain(.nonatomic)) var __associated_stringIsSet: Bool = false
 
             @inline(never) static var __associated___associated_stringIsSetKey: UnsafeRawPointer {
                 _associated_object_key()
@@ -383,35 +383,35 @@ final class AssociatedObjectTests: XCTestCase {
     func testBool() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var bool: Bool = false
             """
         } expansion: {
             """
             var bool: Bool = false {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_boolKey
                     ) as? Bool {
                         return value
                     } else {
                         let value: Bool = false
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_boolKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_boolKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -426,35 +426,35 @@ final class AssociatedObjectTests: XCTestCase {
     func testIntArray() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var intArray: [Int] = [1, 2, 3]
             """
         } expansion: {
             """
             var intArray: [Int] = [1, 2, 3] {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_intArrayKey
                     ) as? [Int] {
                         return value
                     } else {
                         let value: [Int] = [1, 2, 3]
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_intArrayKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_intArrayKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -469,25 +469,25 @@ final class AssociatedObjectTests: XCTestCase {
     func testOptionalBool() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var bool: Bool?
             """
         } expansion: {
             """
             var bool: Bool? {
                 get {
-                    objc_getAssociatedObject(
+                    getAssociatedObject(
                         self,
                         Self.__associated_boolKey
                     ) as? Bool?
                     ?? nil
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_boolKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -502,35 +502,35 @@ final class AssociatedObjectTests: XCTestCase {
     func testDictionary() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var dic: [String: String] = ["t": "a"]
             """
         } expansion: {
             """
             var dic: [String: String] = ["t": "a"] {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_dicKey
                     ) as? [String: String] {
                         return value
                     } else {
                         let value: [String: String] = ["t": "a"]
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_dicKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_dicKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -545,7 +545,7 @@ final class AssociatedObjectTests: XCTestCase {
     func testWillSet() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String = "text" {
                 willSet {
                     print("willSet: old", string)
@@ -561,18 +561,18 @@ final class AssociatedObjectTests: XCTestCase {
                     print("willSet: new", newValue)
                 }
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String {
                         return value
                     } else {
                         let value: String = "text"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_stringKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
@@ -585,11 +585,11 @@ final class AssociatedObjectTests: XCTestCase {
                     }
                     willSet(newValue)
 
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -604,7 +604,7 @@ final class AssociatedObjectTests: XCTestCase {
     func testDidSet() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String = "text" {
                 didSet {
                     print("didSet: old", oldValue)
@@ -618,18 +618,18 @@ final class AssociatedObjectTests: XCTestCase {
                     print("didSet: old", oldValue)
                 }
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String {
                         return value
                     } else {
                         let value: String = "text"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_stringKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
@@ -637,11 +637,11 @@ final class AssociatedObjectTests: XCTestCase {
 
                 set {
                     let oldValue = string
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
 
                     let didSet: (String) -> Void = { [self] oldValue in
@@ -661,7 +661,7 @@ final class AssociatedObjectTests: XCTestCase {
     func testWillSetAndDidSet() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String = "text" {
                 willSet {
                     print("willSet: old", string)
@@ -683,18 +683,18 @@ final class AssociatedObjectTests: XCTestCase {
                     print("didSet: old", oldValue)
                 }
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String {
                         return value
                     } else {
                         let value: String = "text"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_stringKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
@@ -708,11 +708,11 @@ final class AssociatedObjectTests: XCTestCase {
                     willSet(newValue)
 
                     let oldValue = string
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
 
                     let didSet: (String) -> Void = { [self] oldValue in
@@ -732,7 +732,7 @@ final class AssociatedObjectTests: XCTestCase {
     func testWillSetWithArgument() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String = "text" {
                 willSet(new) {
                     print("willSet: old", string)
@@ -748,18 +748,18 @@ final class AssociatedObjectTests: XCTestCase {
                     print("willSet: new", new)
                 }
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String {
                         return value
                     } else {
                         let value: String = "text"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_stringKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
@@ -772,11 +772,11 @@ final class AssociatedObjectTests: XCTestCase {
                     }
                     willSet(newValue)
 
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -791,7 +791,7 @@ final class AssociatedObjectTests: XCTestCase {
     func testDidSetWithArgument() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String = "text" {
                 didSet(old) {
                     print("didSet: old", old)
@@ -805,18 +805,18 @@ final class AssociatedObjectTests: XCTestCase {
                     print("didSet: old", old)
                 }
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String {
                         return value
                     } else {
                         let value: String = "text"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_stringKey,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
@@ -824,11 +824,11 @@ final class AssociatedObjectTests: XCTestCase {
 
                 set {
                     let oldValue = string
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
 
                     let didSet: (String) -> Void = { [self] old in
@@ -855,14 +855,14 @@ final class AssociatedObjectTests: XCTestCase {
             """
             var string: String = "text" {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         Self.__associated_stringKey
                     ) as? String {
                         return value
                     } else {
                         let value: String = "text"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             Self.__associated_stringKey,
                             value,
@@ -872,7 +872,7 @@ final class AssociatedObjectTests: XCTestCase {
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         Self.__associated_stringKey,
                         newValue,
@@ -892,12 +892,12 @@ final class AssociatedObjectTests: XCTestCase {
     func testDiagnosticsDeclarationType() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             struct Item {}
             """
         } diagnostics: {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             ╰─ 🛑 `@AssociatedObject` must be attached to the property declaration.
             struct Item {}
             """
@@ -907,7 +907,7 @@ final class AssociatedObjectTests: XCTestCase {
     func testDiagnosticsGetterAndSetter() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String? {
                 get { "" }
                 set {}
@@ -915,7 +915,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } diagnostics: {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String? {
                 get { "" }
                 set {}
@@ -929,12 +929,12 @@ final class AssociatedObjectTests: XCTestCase {
     func testDiagnosticsInitialValue() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string: String
             """
         } diagnostics: {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             ╰─ 🛑 Initial values must be specified when using `@AssociatedObject`.
             var string: String
             """
@@ -944,12 +944,12 @@ final class AssociatedObjectTests: XCTestCase {
     func testDiagnosticsSpecifyType() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string = ["text", 123]
             """
         } diagnostics: {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)
+            @AssociatedObject(.retain(.nonatomic))
             var string = ["text", 123]
                 ┬─────
                 ├─ 🛑 Specify a type explicitly when using `@AssociatedObject`.
@@ -961,14 +961,14 @@ final class AssociatedObjectTests: XCTestCase {
     func testDiagnosticsInvalidCustomKey() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN, key: "key")
+            @AssociatedObject(.retain(.nonatomic), key: "key")
             var string = "string"
             """
         } diagnostics: {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN, key: "key")
-                                                        ┬─────────
-                                                        ╰─ 🛑 customKey specification is invalid.
+            @AssociatedObject(.retain(.nonatomic), key: "key")
+                                                   ┬─────────
+                                                   ╰─ 🛑 customKey specification is invalid.
             var string = "string"
             """
         }
@@ -979,35 +979,35 @@ extension AssociatedObjectTests {
     func testCustomStoreKey() throws {
         assertMacro {
             """
-            @AssociatedObject(.OBJC_ASSOCIATION_ASSIGN, key: key)
+            @AssociatedObject(.retain(.nonatomic), key: key)
             var string: String = "text"
             """
          } expansion: {
             """
             var string: String = "text" {
                 get {
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         &key
                     ) as? String {
                         return value
                     } else {
                         let value: String = "text"
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             &key,
                             value,
-                            .OBJC_ASSOCIATION_ASSIGN
+                            .retain(.nonatomic)
                         )
                         return value
                     }
                 }
                 set {
-                    objc_setAssociatedObject(
+                    setAssociatedObject(
                         self,
                         &key,
                         newValue,
-                        .OBJC_ASSOCIATION_ASSIGN
+                        .retain(.nonatomic)
                     )
                 }
             }
@@ -1030,8 +1030,8 @@ extension AssociatedObjectTests {
         item.implicitlyUnwrappedString = nil
         XCTAssertEqual(item.implicitlyUnwrappedString, nil)
 
-        item.implicitlyUnwrappedString = "modified"
-        XCTAssertEqual(item.implicitlyUnwrappedString, "modified")
+        item.implicitlyUnwrappedString = "modified hello"
+        XCTAssertEqual(item.implicitlyUnwrappedString, "modified hello")
     }
 
     func testSetDefaultValue() {
