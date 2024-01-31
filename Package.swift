@@ -26,7 +26,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/p-x9/swift-object-association.git",
-            from: "0.4.0"
+            from: "0.5.0"
         ),
         .package(
             url: "https://github.com/pointfreeco/swift-macro-testing.git",
