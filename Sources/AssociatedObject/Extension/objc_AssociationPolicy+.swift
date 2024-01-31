@@ -6,6 +6,8 @@
 //  
 //
 
+#if canImport(ObjectiveC)
+
 import ObjectiveC
 
 /// Extension for objc_AssociationPolicy to provide a more Swift-friendly interface.
@@ -47,3 +49,5 @@ extension objc_AssociationPolicy {
         }
     }
 }
+
+#endif
