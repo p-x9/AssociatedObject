@@ -78,7 +78,7 @@ extension AssociatedObjectMacro: PeerMacro {
             let flagName = "__associated_\(identifier.trimmed)IsSet"
             let flagDecl = VariableDeclSyntax(
                 attributes: [
-                    .attribute("@_AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)")
+                    .attribute("@_AssociatedObject(.retain(.nonatomic))")
                 ],
                 bindingSpecifier: .identifier("var"),
                 bindings: PatternBindingListSyntax {
@@ -180,7 +180,7 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        var policy: ExprSyntax = ".OBJC_ASSOCIATION_RETAIN_NONATOMIC"
+        var policy: ExprSyntax = ".retain(.nonatomic)"
         if let firstElement = arguments.first?.expression,
            let specifiedPolicy = firstElement.as(ExprSyntax.self) {
             policy = specifiedPolicy
@@ -241,7 +241,7 @@ extension AssociatedObjectMacro {
                     """
                     if !self.__associated_\(identifier.trimmed)IsSet {
                         let value: \(type.trimmed) = \(defaultValue.trimmed)
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             \(associatedKey),
                             value,
@@ -250,7 +250,7 @@ extension AssociatedObjectMacro {
                         self.__associated_\(identifier.trimmed)IsSet = true
                         return value
                     } else {
-                        return objc_getAssociatedObject(
+                        return getAssociatedObject(
                             self,
                             \(associatedKey)
                         ) as! \(typeWithoutOptional.trimmed)
@@ -258,14 +258,14 @@ extension AssociatedObjectMacro {
                     """
                 } else if let defaultValue {
                     """
-                    if let value = objc_getAssociatedObject(
+                    if let value = getAssociatedObject(
                         self,
                         \(associatedKey)
                     ) as? \(typeWithoutOptional.trimmed) {
                         return value
                     } else {
                         let value: \(type.trimmed) = \(defaultValue.trimmed)
-                        objc_setAssociatedObject(
+                        setAssociatedObject(
                             self,
                             \(associatedKey),
                             value,
@@ -276,7 +276,7 @@ extension AssociatedObjectMacro {
                     """
                 } else {
                     """
-                    objc_getAssociatedObject(
+                    getAssociatedObject(
                         self,
                         \(associatedKey)
                     ) as? \(typeWithoutOptional.trimmed)
@@ -325,7 +325,7 @@ extension AssociatedObjectMacro {
                 }
 
                 """
-                objc_setAssociatedObject(
+                setAssociatedObject(
                     self,
                     \(associatedKey),
                     newValue,
