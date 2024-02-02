@@ -1,13 +1,25 @@
-@_exported import ObjectiveC
-
 #if canImport(AssociatedObjectC)
 @_exported import AssociatedObjectC
 #endif
 
+
+#if canImport(ObjectiveC)
+
+@_exported import ObjectiveC
+public typealias Policy = objc_AssociationPolicy
+
+#elseif canImport(ObjectAssociation)
+
+@_exported import ObjectAssociation
+public typealias Policy = swift_AssociationPolicy
+
+#endif
+
+
 @attached(peer, names: arbitrary)
 @attached(accessor)
 public macro AssociatedObject(
-    _ policy: objc_AssociationPolicy
+    _ policy: Policy
 ) = #externalMacro(
     module: "AssociatedObjectPlugin",
     type: "AssociatedObjectMacro"
@@ -16,7 +28,7 @@ public macro AssociatedObject(
 @attached(peer, names: arbitrary)
 @attached(accessor)
 public macro AssociatedObject(
-    _ policy: objc_AssociationPolicy,
+    _ policy: Policy,
     key: Any
 ) = #externalMacro(
     module: "AssociatedObjectPlugin",
@@ -25,7 +37,7 @@ public macro AssociatedObject(
 
 @attached(accessor)
 public macro _AssociatedObject(
-    _ policy: objc_AssociationPolicy
+    _ policy: Policy
 ) = #externalMacro(
     module: "AssociatedObjectPlugin",
     type: "AssociatedObjectMacro"

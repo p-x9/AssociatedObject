@@ -78,7 +78,7 @@ extension AssociatedObjectMacro: PeerMacro {
             let flagName = "__associated_\(identifier.trimmed)IsSet"
             let flagDecl = VariableDeclSyntax(
                 attributes: [
-                    .attribute("@_AssociatedObject(.OBJC_ASSOCIATION_ASSIGN)")
+                    .attribute("@_AssociatedObject(.retain(.nonatomic))")
                 ],
                 bindingSpecifier: .identifier("var"),
                 bindings: PatternBindingListSyntax {
@@ -176,15 +176,18 @@ extension AssociatedObjectMacro: AccessorMacro {
             return []
         }
 
-        guard case let .argumentList(arguments) = node.arguments,
-              let firstElement = arguments.first?.expression,
-              let policy = firstElement.as(ExprSyntax.self) else {
+        guard case let .argumentList(arguments) = node.arguments else {
             return []
         }
 
+        var policy: ExprSyntax = ".retain(.nonatomic)"
+        if let firstElement = arguments.first?.expression,
+           let specifiedPolicy = firstElement.as(ExprSyntax.self) {
+            policy = specifiedPolicy
+        }
+
         var associatedKey: ExprSyntax = "Self.__associated_\(identifier.trimmed)Key"
-        if case let .argumentList(arguments) = node.arguments,
-           let element = arguments.first(where: { $0.label?.text == "key" }),
+        if let element = arguments.first(where: { $0.label?.text == "key" }),
            let customKey = element.expression.as(ExprSyntax.self) {
             // Provide store key from outside the macro
             associatedKey = "&\(customKey)"
@@ -225,7 +228,7 @@ extension AssociatedObjectMacro {
         policy: ExprSyntax,
         defaultValue: ExprSyntax?
     ) -> AccessorDeclSyntax {
-        let varTypeWithoutOptional = if let type = type.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
+        let typeWithoutOptional = if let type = type.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
             type.wrappedType
         } else {
             type
@@ -234,51 +237,49 @@ extension AssociatedObjectMacro {
         return AccessorDeclSyntax(
             accessorSpecifier: .keyword(.get),
             body: CodeBlockSyntax {
-                if let defaultValue {
-                    if type.isOptional {
-                        """
-                        if !self.__associated_\(identifier.trimmed)IsSet {
-                            let value: \(type.trimmed) = \(defaultValue.trimmed)
-                            objc_setAssociatedObject(
-                                self,
-                                \(associatedKey),
-                                value,
-                                \(policy.trimmed)
-                            )
-                            self.__associated_\(identifier.trimmed)IsSet = true
-                            return value
-                        } else {
-                            return objc_getAssociatedObject(
-                                self,
-                                \(associatedKey)
-                            ) as! \(varTypeWithoutOptional.trimmed)
-                        }
-                        """
+                if let defaultValue, type.isOptional {
+                    """
+                    if !self.__associated_\(identifier.trimmed)IsSet {
+                        let value: \(type.trimmed) = \(defaultValue.trimmed)
+                        setAssociatedObject(
+                            self,
+                            \(associatedKey),
+                            value,
+                            \(policy.trimmed)
+                        )
+                        self.__associated_\(identifier.trimmed)IsSet = true
+                        return value
                     } else {
-                        """
-                        if let value = objc_getAssociatedObject(
+                        return getAssociatedObject(
                             self,
                             \(associatedKey)
-                        ) as? \(varTypeWithoutOptional.trimmed) {
-                            return value
-                        } else {
-                            let value: \(type.trimmed) = \(defaultValue.trimmed)
-                            objc_setAssociatedObject(
-                                self,
-                                \(associatedKey),
-                                value,
-                                \(policy.trimmed)
-                            )
-                            return value
-                        }
-                        """
+                        ) as! \(typeWithoutOptional.trimmed)
                     }
-                } else {
                     """
-                    objc_getAssociatedObject(
+                } else if let defaultValue {
+                    """
+                    if let value = getAssociatedObject(
                         self,
                         \(associatedKey)
-                    ) as? \(varTypeWithoutOptional.trimmed)
+                    ) as? \(typeWithoutOptional.trimmed) {
+                        return value
+                    } else {
+                        let value: \(type.trimmed) = \(defaultValue.trimmed)
+                        setAssociatedObject(
+                            self,
+                            \(associatedKey),
+                            value,
+                            \(policy.trimmed)
+                        )
+                        return value
+                    }
+                    """
+                } else {
+                    """
+                    getAssociatedObject(
+                        self,
+                        \(associatedKey)
+                    ) as? \(typeWithoutOptional.trimmed)
                     ?? \(defaultValue ?? "nil")
                     """
                 }
@@ -324,7 +325,7 @@ extension AssociatedObjectMacro {
                 }
 
                 """
-                objc_setAssociatedObject(
+                setAssociatedObject(
                     self,
                     \(associatedKey),
                     newValue,

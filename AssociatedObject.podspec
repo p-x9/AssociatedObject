@@ -21,8 +21,11 @@ Pod::Spec.new do |s|
 
   s.prepare_command = 'swift build -c release && cp -f .build/release/AssociatedObjectPlugin ./Binary'
 
-  s.source_files  = "Sources/AssociatedObject/AssociatedObject.swift", 'Sources/AssociatedObjectC/**/*.{c,h,m,swift}'
+  s.source_files  = "Sources/AssociatedObject/**/*.{c,h,m,swift}", 'Sources/AssociatedObjectC/**/*.{c,h,m,swift}'
   s.swift_versions = "5.9"
+
+  # CocoaPods do not support Linux
+  # s.dependency "ObjectAssociation", "0.5.0"
 
   s.preserve_paths = ["Binary/AssociatedObjectPlugin"]
   s.pod_target_xcconfig = {

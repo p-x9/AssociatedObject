@@ -25,6 +25,10 @@ let package = Package(
             from: "0.1.0"
         ),
         .package(
+            url: "https://github.com/p-x9/swift-object-association.git",
+            from: "0.5.0"
+        ),
+        .package(
             url: "https://github.com/pointfreeco/swift-macro-testing.git",
             from: "0.2.2"
         )
@@ -35,7 +39,16 @@ let package = Package(
             name: "AssociatedObject",
             dependencies: [
                 "AssociatedObjectC",
-                "AssociatedObjectPlugin"
+                "AssociatedObjectPlugin",
+                .product(
+                    name: "ObjectAssociation",
+                    package: "swift-object-association",
+                    condition: .when(
+                        platforms: [
+                            .linux, .openbsd, .windows, .android
+                        ]
+                    )
+                )
             ]
         ),
         .target(
