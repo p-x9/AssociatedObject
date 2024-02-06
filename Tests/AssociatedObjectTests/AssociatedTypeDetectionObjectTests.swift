@@ -10,6 +10,8 @@ import XCTest
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 import MacroTesting
+
+#if canImport(AssociatedObjectPlugin)
 @testable import AssociatedObjectPlugin
 @testable import AssociatedObject
 
@@ -816,3 +818,4 @@ extension AssociatedTypeDetectionObjectTests {
         }
     }
 }
+#endif
