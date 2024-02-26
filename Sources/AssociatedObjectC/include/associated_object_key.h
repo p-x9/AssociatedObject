@@ -31,9 +31,6 @@
 #define NOINLINE
 #endif
 
-NOINLINE
-const void *_associated_object_key() {
-    return get_return_address();
-}
+const void *_associated_object_key();
 
 #endif /* associated_object_key_h */
