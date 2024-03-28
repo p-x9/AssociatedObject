@@ -228,8 +228,10 @@ extension AssociatedObjectMacro {
         policy: ExprSyntax,
         defaultValue: ExprSyntax?
     ) -> AccessorDeclSyntax {
-        let typeWithoutOptional = if let type = type.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
-            type.wrappedType
+		let typeWithoutOptional = if let type = type.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
+			type.wrappedType
+		} else if let type = type.as(OptionalTypeSyntax.self) {
+			type.wrappedType
         } else {
             type
         }
@@ -253,7 +255,7 @@ extension AssociatedObjectMacro {
                         return getAssociatedObject(
                             self,
                             \(associatedKey)
-                        ) as! \(typeWithoutOptional.trimmed)
+                        ) as? \(typeWithoutOptional.trimmed)
                     }
                     """
                 } else if let defaultValue {

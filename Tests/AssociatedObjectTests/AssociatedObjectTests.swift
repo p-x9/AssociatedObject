@@ -246,7 +246,7 @@ final class AssociatedObjectTests: XCTestCase {
                     getAssociatedObject(
                         self,
                         Self.__associated_stringKey
-                    ) as? String?
+                    ) as? String
                     ?? nil
                 }
                 set {
@@ -356,7 +356,7 @@ final class AssociatedObjectTests: XCTestCase {
                         return getAssociatedObject(
                             self,
                             Self.__associated_stringKey
-                        ) as! String?
+                        ) as? String
                     }
                 }
                 set {
@@ -481,7 +481,7 @@ final class AssociatedObjectTests: XCTestCase {
                     getAssociatedObject(
                         self,
                         Self.__associated_boolKey
-                    ) as? Bool?
+                    ) as? Bool
                     ?? nil
                 }
                 set {
