@@ -67,7 +67,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_intKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -110,7 +112,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_doubleKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -153,7 +157,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -196,7 +202,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_boolKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -242,7 +250,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_intArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -285,7 +295,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_doubleArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -328,7 +340,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_doubleArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -371,7 +385,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_boolArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -414,7 +430,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_stringArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -460,7 +478,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_optionalIntArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -503,7 +523,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_optionalDoubleArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -546,7 +568,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_doubleArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -590,7 +614,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_optionalBoolArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -633,7 +659,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_optionalStringArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -679,7 +707,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_dicKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -722,7 +752,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_dicKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -765,7 +797,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_dicKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -812,7 +846,9 @@ extension AssociatedTypeDetectionObjectTests {
             }
 
             @inline(never) static var __associated_arrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }

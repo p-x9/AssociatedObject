@@ -55,7 +55,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -98,7 +100,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_intKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -141,7 +145,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_floatKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -184,7 +190,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_doubleKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -227,7 +235,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -260,7 +270,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -293,7 +305,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -326,7 +340,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -370,13 +386,17 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
 
             @_AssociatedObject(.retain(.nonatomic)) var __associated_stringIsSet: Bool = false
 
             @inline(never) static var __associated___associated_stringIsSetKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -419,7 +439,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_boolKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -462,7 +484,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_intArrayKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -495,7 +519,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_boolKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -538,7 +564,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_dicKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -597,7 +625,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -654,7 +684,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -725,7 +757,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -784,7 +818,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -841,7 +877,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -884,7 +922,9 @@ final class AssociatedObjectTests: XCTestCase {
             }
 
             @inline(never) static var __associated_stringKey: UnsafeRawPointer {
-                _associated_object_key()
+                let f: @convention(c) () -> Void = {
+                }
+                return unsafeBitCast(f, to: UnsafeRawPointer.self)
             }
             """
         }
@@ -1047,6 +1087,32 @@ extension AssociatedObjectTests {
 
         item.definedInProtocol = "modified"
         XCTAssertEqual(item.definedInProtocol, "modified")
+    }
+}
+
+extension AssociatedObjectTests {
+    func testKeysUnique() {
+        let keys = [
+            ClassType.__associated_intKey,
+            ClassType.__associated_doubleKey,
+            ClassType.__associated_stringKey,
+            ClassType.__associated_boolKey,
+            ClassType.__associated_optionalIntKey,
+            ClassType.__associated_optionalDoubleKey,
+            ClassType.__associated_optionalStringKey,
+            ClassType.__associated_optionalBoolKey,
+            ClassType.__associated_implicitlyUnwrappedStringKey,
+            ClassType.__associated_intArrayKey,
+            ClassType.__associated_doubleArrayKey,
+            ClassType.__associated_stringArrayKey,
+            ClassType.__associated_boolArrayKey,
+            ClassType.__associated_optionalIntArrayKey,
+            ClassType.__associated_optionalDoubleArrayKey,
+            ClassType.__associated_optionalStringArrayKey,
+            ClassType.__associated_optionalBoolArrayKey,
+            ClassType.__associated_classTypeKey,
+        ]
+        XCTAssertEqual(Set(keys).count, keys.count)
     }
 }
 #endif
