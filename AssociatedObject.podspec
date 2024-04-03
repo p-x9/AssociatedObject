@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "AssociatedObject"
-  s.version      = "0.10.2"
+  s.version      = "0.10.3"
   s.summary      = "Swift Macro for allowing variable declarations even in class extensions."
 
   s.description  = <<-DESC
