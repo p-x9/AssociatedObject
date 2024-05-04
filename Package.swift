@@ -18,11 +18,11 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-syntax.git",
-            from: "509.0.0"
+            "509.0.0"..<"511.0.0"
         ),
         .package(
             url: "https://github.com/p-x9/swift-literal-type-inference.git",
-            from: "0.1.0"
+            from: "0.2.0"
         ),
         .package(
             url: "https://github.com/p-x9/swift-object-association.git",
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/pointfreeco/swift-macro-testing.git",
-            from: "0.2.2"
+            from: "0.3.0"
         )
 
     ],

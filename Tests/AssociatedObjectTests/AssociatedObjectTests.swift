@@ -3,7 +3,10 @@ import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 import MacroTesting
 
-#if canImport(AssociatedObjectPlugin)
+// Note:
+// Prior to version 510, if an initial value was set in AccessorMacro, it was left in place and expanded.
+// Therefore, the following test will always fail when run on version 509. Therefore, the following tests are excluded from execution.
+#if canImport(AssociatedObjectPlugin) && canImport(SwiftSyntax510)
 @testable import AssociatedObjectPlugin
 @testable import AssociatedObject
 
@@ -26,7 +29,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var string: String = "text" {
+            var string: String {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -71,7 +74,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var int: Int = 5 {
+            var int: Int {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -116,7 +119,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var float: Float = 5.0 {
+            var float: Float {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -161,7 +164,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var double: Double = 5.0 {
+            var double: Double {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -206,7 +209,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var string: String = "text" {
+            var string: String {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -356,7 +359,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var string: String? = "hello" {
+            var string: String? {
                 get {
                     if !self.__associated_stringIsSet {
                         let value: String? = "hello"
@@ -410,7 +413,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var bool: Bool = false {
+            var bool: Bool {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -455,7 +458,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var intArray: [Int] = [1, 2, 3] {
+            var intArray: [Int] {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -535,7 +538,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var dic: [String: String] = ["t": "a"] {
+            var dic: [String: String] {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -585,7 +588,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var string: String = "text" {
+            var string: String {
                 willSet {
                     print("willSet: old", string)
                     print("willSet: new", newValue)
@@ -645,7 +648,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var string: String = "text" {
+            var string: String {
                 didSet {
                     print("didSet: old", oldValue)
                 }
@@ -708,7 +711,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var string: String = "text" {
+            var string: String {
                 willSet {
                     print("willSet: old", string)
                     print("willSet: new", newValue)
@@ -778,7 +781,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var string: String = "text" {
+            var string: String {
                 willSet(new) {
                     print("willSet: old", string)
                     print("willSet: new", new)
@@ -838,7 +841,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var string: String = "text" {
+            var string: String {
                 didSet(old) {
                     print("didSet: old", old)
                 }
@@ -893,7 +896,7 @@ final class AssociatedObjectTests: XCTestCase {
             """
         } expansion: {
             """
-            var string: String = "text" {
+            var string: String {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -1026,7 +1029,7 @@ extension AssociatedObjectTests {
             """
          } expansion: {
             """
-            var string: String = "text" {
+            var string: String {
                 get {
                     if let value = getAssociatedObject(
                         self,
