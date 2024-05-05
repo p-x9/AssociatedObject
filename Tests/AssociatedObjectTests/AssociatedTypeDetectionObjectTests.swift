@@ -11,7 +11,7 @@ import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 import MacroTesting
 
-#if canImport(AssociatedObjectPlugin)
+#if canImport(AssociatedObjectPlugin) && canImport(SwiftSyntax510)
 @testable import AssociatedObjectPlugin
 @testable import AssociatedObject
 
@@ -38,7 +38,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var int = 10 {
+            var int {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -83,7 +83,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var double = 10.0 {
+            var double {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -128,7 +128,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var string = "text" {
+            var string {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -173,7 +173,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var bool = false {
+            var bool {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -221,7 +221,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var intArray = [1, 2, 3] {
+            var intArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -266,7 +266,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var doubleArray = [1.0, 2.0, 3.0] {
+            var doubleArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -311,7 +311,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var doubleArray = [1, 1.0, 2, 2.0, 3, 3.0] {
+            var doubleArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -356,7 +356,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var boolArray = [true, false] {
+            var boolArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -401,7 +401,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var stringArray = ["1.0", "2.0", "3.0"] {
+            var stringArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -449,7 +449,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var optionalIntArray = [1, 1, nil, 2, 3, nil] {
+            var optionalIntArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -494,7 +494,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var optionalDoubleArray = [1.0, 2.0, 3.0, nil] {
+            var optionalDoubleArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -539,7 +539,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var doubleArray = [nil, 1, 1.0, nil, 2, 2.0, nil, 3, 3.0] {
+            var doubleArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -585,7 +585,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var optionalBoolArray = [true, false, nil] {
+            var optionalBoolArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -630,7 +630,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var optionalStringArray = [nil, "true", "false", nil] {
+            var optionalStringArray {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -678,7 +678,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var dic = ["t": "a", "s": "b"] {
+            var dic {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -723,7 +723,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var dic = [1: 3, 2: 4] {
+            var dic {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -768,7 +768,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var dic = [1.0: 3.0, 2.0: 4.0] {
+            var dic {
                 get {
                     if let value = getAssociatedObject(
                         self,
@@ -817,7 +817,7 @@ extension AssociatedTypeDetectionObjectTests {
             """
         } expansion: {
             """
-            var array = [[1.0], [2.0], [3.0, 4.0]] {
+            var array {
                 get {
                     if let value = getAssociatedObject(
                         self,
