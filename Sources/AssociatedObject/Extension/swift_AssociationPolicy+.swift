@@ -6,7 +6,7 @@
 //  
 //
 
-#if canImport(ObjectAssociation)
+#if !canImport(ObjectiveC) && canImport(ObjectAssociation)
 
 import ObjectAssociation
 
