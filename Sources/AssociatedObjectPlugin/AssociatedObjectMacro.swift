@@ -208,7 +208,8 @@ extension AssociatedObjectMacro: AccessorMacro {
                 identifier: identifier,
                 type: type,
                 policy: policy,
-                associatedKey: associatedKey,
+                associatedKey: associatedKey, 
+                hasDefaultValue: defaultValue != nil,
                 willSet: binding.willSet,
                 didSet: binding.didSet
             )
@@ -306,6 +307,7 @@ extension AssociatedObjectMacro {
         type: TypeSyntax,
         policy: ExprSyntax,
         associatedKey: ExprSyntax,
+        hasDefaultValue: Bool,
         `willSet`: AccessorDeclSyntax?,
         `didSet`: AccessorDeclSyntax?
     ) -> AccessorDeclSyntax {
@@ -336,6 +338,11 @@ extension AssociatedObjectMacro {
                     \(policy)
                 )
                 """
+                if type.isOptional, hasDefaultValue {
+                    """
+                    self.__associated_\(identifier.trimmed)IsSet = true
+                    """
+                }
 
                 if let didSet = `didSet`,
                    let body = didSet.body {
