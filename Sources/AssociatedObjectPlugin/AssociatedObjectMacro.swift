@@ -184,13 +184,13 @@ extension AssociatedObjectMacro: AccessorMacro {
 
         var policy: ExprSyntax = ".retain(.nonatomic)"
         if let firstElement = arguments.first?.expression,
-           let specifiedPolicy = firstElement.as(ExprSyntax.self) {
+           let specifiedPolicy = ExprSyntax(firstElement) {
             policy = specifiedPolicy
         }
 
         var associatedKey: ExprSyntax = "Self.__associated_\(identifier.trimmed)Key"
         if let element = arguments.first(where: { $0.label?.text == "key" }),
-           let customKey = element.expression.as(ExprSyntax.self) {
+           let customKey = ExprSyntax(element.expression) {
             // Provide store key from outside the macro
             associatedKey = "&\(customKey)"
         }
@@ -208,7 +208,7 @@ extension AssociatedObjectMacro: AccessorMacro {
                 identifier: identifier,
                 type: type,
                 policy: policy,
-                associatedKey: associatedKey, 
+                associatedKey: associatedKey,
                 hasDefaultValue: defaultValue != nil,
                 willSet: binding.willSet,
                 didSet: binding.didSet
@@ -231,10 +231,10 @@ extension AssociatedObjectMacro {
         policy: ExprSyntax,
         defaultValue: ExprSyntax?
     ) -> AccessorDeclSyntax {
-		let typeWithoutOptional = if let type = type.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
-			type.wrappedType
-		} else if let type = type.as(OptionalTypeSyntax.self) {
-			type.wrappedType
+        let typeWithoutOptional = if let type = type.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
+            type.wrappedType
+        } else if let type = type.as(OptionalTypeSyntax.self) {
+            type.wrappedType
         } else {
             type
         }
@@ -398,11 +398,17 @@ extension AssociatedObjectMacro {
                         value: ClosureExprSyntax(
                             signature: .init(
                                 capture: .init() {
+#if canImport(SwiftSyntax601)
+                                    ClosureCaptureSyntax(
+                                        name: .keyword(.`self`)
+                                    )
+#else
                                     ClosureCaptureSyntax(
                                         expression: DeclReferenceExprSyntax(
                                             baseName: .keyword(.`self`)
                                         )
                                     )
+#endif
                                 },
                                 parameterClause: .init(ClosureShorthandParameterListSyntax() {
                                     ClosureShorthandParameterSyntax(name: newValue)
@@ -456,11 +462,17 @@ extension AssociatedObjectMacro {
                         value: ClosureExprSyntax(
                             signature: .init(
                                 capture: .init() {
+#if canImport(SwiftSyntax601)
+                                    ClosureCaptureSyntax(
+                                        name: .keyword(.`self`)
+                                    )
+#else
                                     ClosureCaptureSyntax(
                                         expression: DeclReferenceExprSyntax(
                                             baseName: .keyword(.`self`)
                                         )
                                     )
+#endif
                                 },
                                 parameterClause: .init(ClosureShorthandParameterListSyntax() {
                                     ClosureShorthandParameterSyntax(name: oldValue)
