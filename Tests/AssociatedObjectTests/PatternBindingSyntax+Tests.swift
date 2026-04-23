@@ -82,9 +82,11 @@ final class PatternBindingSyntaxTests: XCTestCase {
         binding = .init(
             pattern: IdentifierPatternSyntax(identifier: .identifier("value")),
             accessorBlock: .init(
-                accessors: .getter(.init {
-                    DeclSyntax("\"hello\"")
-                })
+                accessors: .getter(
+                    .init {
+                        "\"hello\""
+                    }
+                )
             )
         )
 
@@ -105,9 +107,11 @@ final class PatternBindingSyntaxTests: XCTestCase {
 
         let newGetter = AccessorDeclSyntax(
             accessorSpecifier: .keyword(.get),
-            body: .init(statements: CodeBlockItemListSyntax {
-                .init(item: .decl("\"hello\""))
-            })
+            body: .init(
+                statements: .init {
+                    "\"hello\""
+                }
+            )
         )
 
         binding.getter = newGetter
@@ -117,9 +121,11 @@ final class PatternBindingSyntaxTests: XCTestCase {
         binding = .init(
             pattern: IdentifierPatternSyntax(identifier: .identifier("value")),
             accessorBlock: .init(
-                accessors: .getter(.init {
-                    DeclSyntax("\"hello\"")
-                })
+                accessors: .getter(
+                    .init {
+                        "\"hello\""
+                    }
+                )
             )
         )
 
@@ -184,9 +190,11 @@ final class PatternBindingSyntaxTests: XCTestCase {
 
         let newWillSet = AccessorDeclSyntax(
             accessorSpecifier: .keyword(.willSet),
-            body: .init(statements: CodeBlockItemListSyntax {
-                .init(item: .decl("\"hello\""))
-            })
+            body: .init(
+                statements: .init {
+                    "\"hello\""
+                }
+            )
         )
 
         binding.willSet = newWillSet
