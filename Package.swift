@@ -18,11 +18,11 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/swiftlang/swift-syntax.git",
-            "509.0.0"..<"603.0.0"
+            "509.0.0"..<"604.0.0"
         ),
         .package(
             url: "https://github.com/p-x9/swift-literal-type-inference.git",
-            from: "0.5.0"
+            from: "0.6.0"
         ),
         .package(
             url: "https://github.com/p-x9/swift-object-association.git",
